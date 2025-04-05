@@ -1,37 +1,37 @@
-# Cómo Contribuir al Mapa del Ecosistema Cardano
+# How to Contribute to the Cardano Ecosystem Map
 
-¡Gracias por tu interés en contribuir a este mapa! A continuación, se detallan los pasos para proponer la adición o modificación de actores del ecosistema.
+Thank you for your interest in contributing to this map! Below are the steps to propose adding or modifying ecosystem actors.
 
-## Proceso de Contribución (Vía Pull Requests)
+## Contribution Process (Via Pull Requests)
 
-Utilizamos Pull Requests (PRs) de GitHub para gestionar las contribuciones. El flujo básico es:
+We use GitHub Pull Requests (PRs) to manage contributions. The basic workflow is:
 
-1.  **Fork:** Haz un "Fork" de este repositorio a tu propia cuenta de GitHub.
-2.  **Branch:** Crea una nueva "Branch" (rama) en tu fork con un nombre descriptivo (ej. `add-project-xyz` o `update-ambassador-abc`).
-3.  **Edita:** Modifica el archivo `data/cardano-actors.json` en tu rama:
-    * **Añadir:** Agrega un nuevo objeto JSON al final de la lista (antes del `]` final), asegurándote de mantener la sintaxis JSON correcta (comas entre objetos, etc.).
-    * **Modificar:** Encuentra el objeto existente que deseas cambiar y actualiza sus valores.
-4.  **Commit:** Guarda tus cambios con un mensaje claro (ej. "feat: Add Project XYZ to map").
-5.  **Pull Request (PR):** Abre un Pull Request desde tu rama hacia la rama `main` de este repositorio original. En la descripción del PR, explica brevemente qué añadiste o modificaste y proporciona enlaces o referencias si es posible para verificar la información.
+1.  **Fork:** Fork this repository to your own GitHub account.
+2.  **Branch:** Create a new branch in your fork with a descriptive name (e.g., `add-project-xyz` or `update-ambassador-abc`).
+3.  **Edit:** Modify the `data/cardano-actors.json` file in your branch:
+    * **Add:** Add a new JSON object to the end of the list (before the final `]`), ensuring you maintain correct JSON syntax (commas between objects, etc.).
+    * **Modify:** Find the existing object you want to change and update its values.
+4.  **Commit:** Save your changes with a clear commit message (e.g., "feat: Add Project XYZ to map").
+5.  **Pull Request (PR):** Open a Pull Request from your branch to the `main` branch of this original repository. In the PR description, briefly explain what you added or modified and provide links or references if possible to verify the information.
 
-## Formato de Datos (`data/cardano-actors.json`)
+## Data Format (`data/cardano-actors.json`)
 
-Cada actor en el archivo `data/cardano-actors.json` es un objeto JSON con los siguientes campos:
+Each actor in the `data/cardano-actors.json` file is a JSON object with the following fields:
 
-* `lat` (Número): Latitud geográfica. (Obligatorio)
-* `lng` (Número): Longitud geográfica. (Obligatorio)
-    * *Puedes obtener coordenadas aproximadas usando Google Maps (haz clic derecho en un punto -> "¿Qué hay aquí?").*
-* `name` (Texto): Nombre del actor (persona, proyecto, hub, etc.). (Obligatorio)
-* `type` (Texto): Categoría del actor. Valores válidos actuales: `Founder`, `Hub`, `University`, `Project`, `Ambassador`. (Esta lista puede crecer). (Obligatorio)
-* `city` (Texto): Ciudad principal de ubicación. (Obligatorio)
-* `country` (Texto): País de ubicación. (Obligatorio)
-* `description` (Texto): Descripción breve (1-2 frases) sobre el actor o su relevancia en Cardano. (Obligatorio)
-* *(Opcional: podríamos añadir `url` (Texto) para un enlace web, `twitter` (Texto) para el handle, etc. en el futuro).*
+* `lat` (Number): Geographic latitude. (Required)
+* `lng` (Number): Geographic longitude. (Required)
+    * *You can get approximate coordinates using Google Maps (right-click on a point -> "What's here?").*
+* `name` (String): Name of the actor (person, project, hub, etc.). (Required)
+* `type` (String): Category of the actor. Current valid values: `Founder`, `Hub`, `University`, `Project`, `Ambassador`. (This list may grow). (Required)
+* `city` (String): Main city of location. (Required)
+* `country` (String): Country of location. (Required)
+* `description` (String): Brief description (1-2 sentences) about the actor or their relevance to Cardano. (Required)
+* *(Optional: We might add `url` (String) for a web link, `twitter` (String) for the handle, etc., in the future).*
 
-**Importante:** Asegúrate de que el archivo `cardano-actors.json` completo siga siendo un JSON válido después de tus cambios. Puedes usar un validador de JSON online si tienes dudas.
+**Important:** Ensure the entire `cardano-actors.json` file remains valid JSON after your changes. You can use an online JSON validator if unsure.
 
-## Revisión
+## Review
 
-Un mantenedor del repositorio revisará tu Pull Request. Puede que te pidan cambios o aclaraciones. Una vez aprobado, tu contribución será fusionada y aparecerá en el mapa poco después.
+A repository maintainer will review your Pull Request. They may ask for changes or clarifications. Once approved, your contribution will be merged and will appear on the map shortly after.
 
-¡Gracias de nuevo por ayudar a mantener este recurso actualizado!
+Thank you again for helping keep this resource up-to-date!
