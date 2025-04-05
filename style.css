@@ -1,0 +1,94 @@
+/* Estilo para el icono de configuración */
+#settings-icon {
+    position: fixed; /* Se queda fijo en la pantalla */
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem; /* Tamaño del icono */
+    cursor: pointer; /* Cambia el cursor a una mano */
+    z-index: 1001; /* Asegura que esté sobre el globo */
+    background-color: rgba(255, 255, 255, 0.7); /* Fondo semi-transparente */
+    border-radius: 50%; /* Lo hace redondo */
+    padding: 5px 8px; /* Espaciado interno */
+    line-height: 1; /* Ajuste para centrar el emoji */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra suave */
+}
+
+#settings-icon:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* Más opaco al pasar el mouse */
+}
+
+/* Estilo base del Modal (oculto por defecto) */
+.modal {
+    display: none; /* Oculto inicialmente */
+    position: fixed; /* Se queda fijo cubriendo todo */
+    z-index: 1000; /* Debe estar sobre el globo pero debajo del icono si quisiéramos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite scroll si el contenido es muy largo */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro semi-transparente */
+    /* Efecto de aparición suave (opcional) */
+    animation-name: fadeIn;
+    animation-duration: 0.4s
+}
+
+/* Contenido del Modal */
+.modal-content {
+    background-color: #fefefe; /* Fondo blanco */
+    margin: 10% auto; /* 10% desde arriba/abajo, centrado horizontalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    max-width: 500px; /* Ancho máximo */
+    border-radius: 5px;
+    position: relative; /* Necesario para posicionar el botón de cierre */
+     /* Efecto de deslizamiento (opcional) */
+    animation-name: slideIn;
+    animation-duration: 0.4s
+}
+
+/* Botón de cierre (X) */
+.close-button {
+    color: #aaa;
+    position: absolute; /* Posición relativa al modal-content */
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Clase para mostrar el modal (se añadirá/quitará con JS) */
+.modal-visible {
+    display: block; /* Lo hace visible */
+}
+
+/* Animaciones opcionales para aparecer/deslizar */
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+@keyframes slideIn {
+    from {top: -100px; opacity: 0}
+    to {top: 0; opacity: 1} /* Ajustar 'top: 0' si el 'margin: 10% auto' no funciona bien con la animación */
+    /* Alternativa para slideIn si se usa margin: */
+    /* from {margin-top: -50px; opacity: 0}
+       to {margin-top: 10%; opacity: 1} */
+}
+
+
+/* Ajustes menores para asegurar que el globo no interfiera */
+#globeViz {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Asegura que esté detrás de todo */
+}
