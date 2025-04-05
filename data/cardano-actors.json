@@ -1,0 +1,47 @@
+[
+    {
+      "lat": 51.5074,
+      "lng": -0.1278,
+      "name": "Charles Hoskinson (Visita)",
+      "type": "Founder",
+      "city": "Londres",
+      "country": "UK",
+      "description": "Co-fundador de Cardano (Ubicación simbólica/evento)."
+    },
+    {
+      "lat": -34.6037,
+      "lng": -58.3816,
+      "name": "Cardano Hub LATAM",
+      "type": "Hub",
+      "city": "Buenos Aires",
+      "country": "Argentina",
+      "description": "Centro de actividad para la comunidad de América Latina."
+    },
+    {
+      "lat": 35.6895,
+      "lng": 139.6917,
+      "name": "Universidad de Tokio (Investigación)",
+      "type": "University",
+      "city": "Tokio",
+      "country": "Japón",
+      "description": "Colaboraciones académicas e investigación en blockchain."
+    },
+    {
+      "lat": 40.7128,
+      "lng": -74.0060,
+      "name": "Proyecto DeFi XYZ",
+      "type": "Project",
+      "city": "Nueva York",
+      "country": "USA",
+      "description": "Un proyecto innovador construido sobre Cardano."
+    },
+    {
+      "lat": 6.5244,
+      "lng": 3.3792,
+      "name": "Ambassador Lagos",
+      "type": "Ambassador",
+      "city": "Lagos",
+      "country": "Nigeria",
+      "description": "Embajador promoviendo Cardano en África Occidental."
+    }
+  ]
