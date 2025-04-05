@@ -1,3 +1,7 @@
+[Leer este documento en Español](CONTRIBUTING.es.md)
+
+---
+
 # How to Contribute to the Cardano Ecosystem Map
 
 Thank you for your interest in contributing to this map! Below are the steps to propose adding or modifying ecosystem actors.
