@@ -57,13 +57,13 @@ jobs:
       # Paso 3: Crear el Issue usando GitHub CLI (gh)
       - name: Create GitHub Issue using gh CLI
         env:
-          # gh usa GITHUB_TOKEN automáticamente para autenticarse
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Pasamos los outputs del paso anterior como variables de entorno
+          # ---------- CAMBIO AQUÍ ----------
+          # Usamos el PAT específico que guardamos como secret, en lugar del token por defecto
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }}
+          # ---------------------------------
           ISSUE_TITLE: ${{ steps.format.outputs.issue_title }}
           ISSUE_BODY: ${{ steps.format.outputs.issue_body }}
         run: |
-          # Usamos el comando 'gh issue create' con los flags --title y --body
-          # Las comillas son importantes
+          # El comando gh usa GITHUB_TOKEN para autenticarse
           gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
         shell: bash
