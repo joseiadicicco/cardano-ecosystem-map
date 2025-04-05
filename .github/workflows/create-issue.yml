@@ -12,19 +12,15 @@ jobs:
     name: Create GitHub Issue Job
     runs-on: ubuntu-latest
     steps:
-      # ---------- PASO NUEVO AÑADIDO ----------
-      # Descarga el código del repositorio al workspace de la Action
-      # Soluciona el error "ISSUE_TEMPLATE.md could not be found"
+      # Paso 1: Hacer checkout del código (Importante aunque no usemos template ahora)
       - name: Checkout Repository
-        uses: actions/checkout@v4 # Usamos la versión 4 que es la más reciente
+        uses: actions/checkout@v4
 
-      # ------------------------------------------
-
-      # Paso 1 (anterior): Formatear título y cuerpo
+      # Paso 2: Formatear título y cuerpo (Igual que antes)
       - name: Format Issue Content
         id: format
         run: |
-          # Script bash para extraer datos y formatear (SIN CAMBIOS INTERNOS)
+          # Script bash para extraer datos y formatear
           NAME="${{ github.event.client_payload.name }}"
           TYPE="${{ github.event.client_payload.type }}"
           CITY="${{ github.event.client_payload.city }}"
@@ -49,6 +45,7 @@ jobs:
           *Por favor, revisar y verificar esta información antes de añadirla a \`data/cardano-actors.json\`.*
           EOF
           )
+          # Preparamos outputs escapando caracteres
           ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
           ISSUE_BODY="${ISSUE_BODY//$'\n'/'%0A'}"
           ISSUE_BODY="${ISSUE_BODY//$'\r'/'%0D'}"
@@ -56,13 +53,17 @@ jobs:
           echo "issue_body=$ISSUE_BODY" >> $GITHUB_OUTPUT
         shell: bash
 
-      # Paso 2 (anterior): Crear el Issue (asegurando inputs correctos)
-      - name: Create GitHub Issue
-        uses: JasonEtco/create-an-issue@v2
+      # ---------- PASO MODIFICADO/NUEVO ----------
+      # Paso 3: Crear el Issue usando GitHub CLI (gh)
+      - name: Create GitHub Issue using gh CLI
         env:
+          # gh usa GITHUB_TOKEN automáticamente para autenticarse
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # Aseguramos que los nombres de input sean 'title' y 'body'
-          title: ${{ steps.format.outputs.issue_title }} # Correcto
-          body: ${{ steps.format.outputs.issue_body }}   # Correcto
-          # labels: new-proposal, needs-review # Optional
+          # Pasamos los outputs del paso anterior como variables de entorno
+          ISSUE_TITLE: ${{ steps.format.outputs.issue_title }}
+          ISSUE_BODY: ${{ steps.format.outputs.issue_body }}
+        run: |
+          # Usamos el comando 'gh issue create' con los flags --title y --body
+          # Las comillas son importantes
+          gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
+        shell: bash
