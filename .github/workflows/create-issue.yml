@@ -1,0 +1,81 @@
+# Nombre descriptivo del workflow que aparecerá en la pestaña Actions de GitHub
+name: Create Issue from Web Form
+
+# Define cuándo se ejecuta este workflow
+on:
+  # Se dispara con un evento 'repository_dispatch' enviado a la API de GitHub
+  repository_dispatch:
+    # Solo reacciona a eventos con el tipo específico 'new-actor-proposal'
+    # Esto nos permite tener diferentes triggers para diferentes formularios si quisiéramos
+    types: [new-actor-proposal]
+
+# Define los trabajos (jobs) que se ejecutarán
+jobs:
+  create_issue_job:
+    # Nombre del trabajo
+    name: Create GitHub Issue Job
+    # El tipo de máquina virtual donde se ejecutará el trabajo
+    runs-on: ubuntu-latest
+    # Los pasos que ejecutará el trabajo secuencialmente
+    steps:
+      # Paso 1: Formatear el título y cuerpo del Issue a partir de los datos recibidos
+      - name: Format Issue Content
+        id: format # Le damos un ID a este paso para referenciar sus salidas
+        # vvv IMPORTANTE: Asegúrate que todas las líneas de abajo están indentadas más que 'run:' vvv
+        run: |
+          # Extraemos los datos enviados desde el frontend. Están en github.event.client_payload
+          # Usamos bash para crear variables y construir el cuerpo
+          NAME="${{ github.event.client_payload.name }}"
+          TYPE="${{ github.event.client_payload.type }}"
+          CITY="${{ github.event.client_payload.city }}"
+          COUNTRY="${{ github.event.client_payload.country }}"
+          LAT="${{ github.event.client_payload.lat }}"
+          LNG="${{ github.event.client_payload.lng }}"
+          DESC="${{ github.event.client_payload.description }}"
+
+          # Creamos el título para el nuevo Issue
+          ISSUE_TITLE="Propuesta Nuevo Actor: $NAME"
+
+          # Creamos el cuerpo (body) del Issue usando formato Markdown
+          # 'EOF' marca el inicio y fin de un bloque de texto multilinea en bash
+          ISSUE_BODY=$(cat <<EOF
+          **Nueva Propuesta de Actor Recibida desde el Formulario Web:**
+
+          * **Nombre:** $NAME
+          * **Tipo:** $TYPE
+          * **Ciudad:** $CITY
+          * **País:** $COUNTRY
+          * **Latitud:** \`$LAT\`
+          * **Longitud:** \`$LNG\`
+          * **Descripción:**
+              >$DESC
+
+          ---
+          *Por favor, revisar y verificar esta información antes de añadirla a \`data/cardano-actors.json\`.*
+          EOF
+          )
+
+          # Preparamos las variables para que el siguiente paso las pueda usar
+          # Es necesario escapar caracteres especiales y saltos de línea para las salidas multilinea
+          ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
+          ISSUE_BODY="${ISSUE_BODY//$'\n'/'%0A'}"
+          ISSUE_BODY="${ISSUE_BODY//$'\r'/'%0D'}"
+          # Guardamos el título y el cuerpo como 'outputs' del paso usando la sintaxis recomendada
+          echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
+          echo "issue_body=$ISSUE_BODY" >> $GITHUB_OUTPUT
+        shell: bash # Especificamos que el script 'run' usa bash
+
+      # Paso 2: Usar una acción pre-hecha para crear el Issue en GitHub
+      - name: Create GitHub Issue
+        # Esta es una acción popular y sencilla para crear issues
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          # GitHub Actions proporciona automáticamente este token seguro
+          # Tiene permisos para crear issues en el propio repositorio
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Usamos las salidas (outputs) generadas en el paso anterior ('format')
+          title: ${{ steps.format.outputs.issue_title }}
+          body: ${{ steps.format.outputs.issue_body }}
+          # Opcional: Podríamos añadir etiquetas (labels) automáticamente
+          # labels: new-proposal, needs-review
