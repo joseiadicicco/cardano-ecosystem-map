@@ -1,216 +1,311 @@
-/* Estilo para el icono de configuración */
+/* === style.css === COMPLETO === */
+
+/* --- 1. Base Theme & Variables --- */
+/* Importar la fuente desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
+
+/* Definición de variables de color y fuente para el tema */
+:root {
+  --bg-color: #0a0f1a; /* Azul muy oscuro / casi negro */
+  --text-color: #e0e0e0; /* Gris muy claro / casi blanco */
+  --text-color-light: #ffffff; /* Blanco puro para títulos */
+  --accent-color: #00e0ff; /* Cian brillante para acentos/bordes/iconos */
+  --panel-bg-color: rgba(15, 25, 40, 0.95); /* Azul oscuro semi-transparente para paneles */
+  --input-bg-color: rgba(10, 15, 26, 0.9); /* Fondo oscuro para inputs */
+  --border-color: rgba(0, 224, 255, 0.3); /* Borde cian tenue */
+  --hover-bg-color: rgba(0, 224, 255, 0.1); /* Fondo sutil cian en hover */
+  --shadow-color: rgba(0, 224, 255, 0.15); /* Sombra/Glow cian */
+  --error-color: #EF5350; /* Rojo para errores (si se usa) */
+  --font-family: 'Roboto Mono', monospace; /* Fuente monoespaciada */
+}
+
+/* Estilos globales del body */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-weight: 300; /* Peso ligero para la fuente mono */
+  margin: 0;
+  overflow: hidden; /* Evita barras de scroll innecesarias */
+}
+
+/* Estilo base para enlaces */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* --- 2. Globe Container --- */
+#globeViz {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0; /* Detrás de todo */
+}
+
+/* --- 3. Settings Icon --- */
 #settings-icon {
-    position: fixed; /* Se queda fijo en la pantalla */
+    position: fixed;
     bottom: 20px;
     right: 20px;
-    font-size: 2rem; /* Tamaño del icono */
-    cursor: pointer; /* Cambia el cursor a una mano */
-    z-index: 1001; /* Asegura que esté sobre el globo */
-    background-color: rgba(255, 255, 255, 0.7); /* Fondo semi-transparente */
-    border-radius: 50%; /* Lo hace redondo */
-    padding: 5px 8px; /* Espaciado interno */
-    line-height: 1; /* Ajuste para centrar el emoji */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra suave */
+    font-size: 1.5rem; /* Tamaño del icono */
+    cursor: pointer;
+    z-index: 1001; /* Encima del globo */
+    background-color: rgba(15, 25, 40, 0.8); /* Fondo oscuro */
+    color: var(--accent-color); /* Icono color acento */
+    border: 1px solid var(--border-color); /* Borde tenue */
+    border-radius: 50%; /* Redondo */
+    padding: 8px 10px; /* Espaciado interno */
+    line-height: 1; /* Centrado vertical */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Sombra */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 #settings-icon:hover {
-    background-color: rgba(255, 255, 255, 0.9); /* Más opaco al pasar el mouse */
+    background-color: rgba(30, 45, 65, 0.9); /* Fondo al pasar cursor */
+    box-shadow: 0 0 8px var(--accent-color); /* Efecto glow */
 }
 
-/* Estilo base del Modal (oculto por defecto) */
-.modal {
-    display: none; /* Oculto inicialmente */
-    position: fixed; /* Se queda fijo cubriendo todo */
-    z-index: 1000; /* Debe estar sobre el globo pero debajo del icono si quisiéramos */
+/* --- 4. Settings Panel (Popup) --- */
+.settings-popup {
+    position: fixed;
+    bottom: 75px; /* Encima del icono (ajustar si es necesario) */
+    right: 20px;
+    width: 200px;
+    background-color: var(--panel-bg-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1010; /* Encima del icono */
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    /* Oculto por defecto con transición */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Clase para mostrar el popup */
+.settings-popup.settings-popup-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Botones dentro del popup de configuración */
+.settings-popup button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    margin: 0 0 5px 0;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 0.9em;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+.settings-popup button:last-child { margin-bottom: 0; }
+.settings-popup button:hover { background-color: var(--hover-bg-color); }
+.settings-popup button i.fas {
+    margin-right: 10px;
+    width: 16px;
+    text-align: center;
+    color: var(--accent-color);
+}
+
+/* --- 5. Form Modal --- */
+.modal { /* Contenedor oscuro de fondo */
+    display: none;
+    position: fixed;
+    z-index: 1000; /* Detrás del panel de config pero encima del globo */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Permite scroll si el contenido es muy largo */
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro semi-transparente */
-    /* Efecto de aparición suave (opcional) */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.75); /* Más oscuro */
     animation-name: fadeIn;
-    animation-duration: 0.4s
+    animation-duration: 0.4s;
 }
 
-/* Contenido del Modal */
-.modal-content {
-    background-color: #fefefe; /* Fondo blanco */
-    margin: 10% auto; /* 10% desde arriba/abajo, centrado horizontalmente */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Ancho del modal */
-    max-width: 500px; /* Ancho máximo */
-    border-radius: 5px;
-    position: relative; /* Necesario para posicionar el botón de cierre */
-     /* Efecto de deslizamiento (opcional) */
+.modal-content { /* Caja del contenido */
+    background-color: var(--panel-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 20px var(--shadow-color); /* Glow más pronunciado */
+    border-radius: 4px;
+    margin: 8% auto;
+    padding: 25px 35px; /* Más padding */
+    width: 85%;
+    max-width: 650px; /* Un poco más ancho */
+    position: relative;
     animation-name: slideIn;
-    animation-duration: 0.4s
+    animation-duration: 0.4s;
 }
 
-/* Botón de cierre (X) */
+/* Botón de cierre (X) del modal */
 .close-button {
     color: #aaa;
-    position: absolute; /* Posición relativa al modal-content */
-    top: 10px;
+    position: absolute;
+    top: 15px; /* Ajustar posición */
     right: 20px;
     font-size: 28px;
     font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 1px 0 #000;
 }
-
 .close-button:hover,
 .close-button:focus {
-    color: black;
+    color: #fff;
     text-decoration: none;
     cursor: pointer;
 }
 
-/* Clase para mostrar el modal (se añadirá/quitará con JS) */
-.modal-visible {
-    display: block; /* Lo hace visible */
+/* Clase para mostrar el modal */
+.modal.modal-visible {
+    display: block;
 }
 
-/* Animaciones opcionales para aparecer/deslizar */
+/* Estilos para elementos DENTRO del Formulario */
+ .modal-content h2 { /* Título del formulario */
+    color: var(--text-color-light);
+    font-weight: 400;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-top: 0px;
+    margin-bottom: 25px; /* Más espacio */
+    font-size: 1.4em;
+    text-align: center; /* Centrar título */
+ }
+ .modal-content label {
+    font-weight: 400;
+    font-size: 0.9em;
+    color: var(--accent-color); /* Etiquetas resaltadas */
+    display: block; /* Asegurar que esté en su propia línea */
+    margin-bottom: 3px;
+ }
+ .modal-content small {
+    font-size: 0.8em;
+    color: #aaa;
+    display: block;
+    margin-top: 4px;
+ }
+
+/* Inputs, Select, Textarea */
+#form-modal input[type="text"],
+#form-modal input[type="number"],
+#form-modal input[type="url"],
+#form-modal select,
+#form-modal textarea {
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 9px 12px;
+  border-radius: 3px;
+  margin-top: 0px; /* Quitar margen superior, ya lo tiene el label */
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  font-size: 0.95em;
+  width: 100%; /* Usar todo el ancho disponible */
+}
+
+/* Quitar apariencia por defecto del navegador para <select> */
+#form-modal select {
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300e0ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat; background-position: right 10px top 50%; background-size: 10px auto;
+  padding-right: 30px; /* Espacio para la flecha */
+}
+/* Estilo de las opciones del select */
+#form-modal select option { background-color: #1a2a45; color: var(--text-color); }
+
+/* Estilo al enfocar un campo */
+#form-modal input:focus,
+#form-modal select:focus,
+#form-modal textarea:focus {
+  outline: none; border-color: var(--accent-color); box-shadow: 0 0 5px var(--shadow-color);
+}
+
+/* Estilo del texto placeholder */
+#form-modal input::placeholder,
+#form-modal textarea::placeholder { color: rgba(224, 224, 224, 0.4); opacity: 1; }
+#form-modal input::-ms-input-placeholder, #form-modal textarea::-ms-input-placeholder { color: rgba(224, 224, 224, 0.4); }
+
+/* Botón Submit del Formulario */
+#actor-form button[type="submit"] {
+  background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color);
+  padding: 10px 20px; border-radius: 3px; cursor: pointer;
+  font-family: var(--font-family); font-weight: 400; margin-top: 20px; /* Más espacio arriba */
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: block; /* Centrarlo */
+  margin-left: auto;
+  margin-right: auto;
+}
+#actor-form button[type="submit"]:hover { background-color: var(--hover-bg-color); color: var(--text-color-light); }
+#actor-form button[type="submit"]:disabled { border-color: #555; color: #555; cursor: not-allowed; background-color: transparent; opacity: 0.5; }
+
+
+/* --- 6. Details Panel (Sidebar) --- */
+#details-panel {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Empieza fuera */
+    width: 320px;
+    max-width: 85%;
+    height: 100%;
+    background-color: var(--panel-bg-color);
+    padding: 25px;
+    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.3); /* Sombra más oscura */
+    overflow-y: auto;
+    z-index: 1005; /* Encima del icono, debajo del panel config */
+    transition: right 0.4s ease-in-out;
+    box-sizing: border-box;
+    border-left: 1px solid var(--border-color);
+}
+
+#details-panel.panel-visible {
+    right: 0; /* Desliza hacia adentro */
+}
+
+/* Botón de cierre del panel de detalles */
+.close-panel-button {
+    color: #aaa; position: absolute; top: 15px; right: 20px;
+    font-size: 28px; font-weight: bold; line-height: 1; text-shadow: 0 1px 0 #000;
+}
+.close-panel-button:hover,
+.close-panel-button:focus { color: #fff; text-decoration: none; cursor: pointer; }
+
+/* Estilos contenido panel detalles */
+ #details-panel h3 { /* Título */
+    color: var(--text-color-light); font-weight: 400;
+    border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
+    margin-top: 5px; margin-bottom: 15px; font-size: 1.3em;
+ }
+ #details-panel p { margin-bottom: 10px; line-height: 1.5; color: var(--text-color); font-size: 0.95em; }
+ #details-panel hr { border: none; border-top: 1px solid var(--border-color); margin: 15px 0; }
+ #details-panel strong { font-weight: 400; color: var(--accent-color); margin-right: 5px; } /* Resaltar etiquetas */
+ .panel-links a { word-break: break-all; } /* Evitar que links largos rompan layout */
+ .panel-links p { margin-bottom: 8px; } /* Menos espacio entre links */
+
+
+/* --- 7. Animaciones (Opcional) --- */
 @keyframes fadeIn {
     from {opacity: 0}
     to {opacity: 1}
 }
 
-@keyframes slideIn {
-    from {top: -100px; opacity: 0}
-    to {top: 0; opacity: 1} /* Ajustar 'top: 0' si el 'margin: 10% auto' no funciona bien con la animación */
-    /* Alternativa para slideIn si se usa margin: */
-    /* from {margin-top: -50px; opacity: 0}
-       to {margin-top: 10%; opacity: 1} */
+@keyframes slideIn { /* Animación para el modal */
+   from {margin-top: -50px; opacity: 0}
+   to {margin-top: 8%; opacity: 1}
 }
 
-
-/* Ajustes menores para asegurar que el globo no interfiera */
-#globeViz {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0; /* Asegura que esté detrás de todo */
-}
-
-/* --- Estilos para el Panel Lateral de Detalles --- */
-
-#details-panel {
-    position: fixed; /* Fijo en la pantalla, no se mueve con el scroll */
-    top: 0;
-    right: -350px; /* Empieza fuera de la pantalla a la derecha (ancho + un poco más) */
-    width: 320px; /* Ancho del panel */
-    max-width: 85%; /* Ancho máximo en pantallas pequeñas */
-    height: 100%; /* Altura completa de la ventana */
-    background-color: #fdfdfd; /* Un fondo casi blanco */
-    padding: 25px;
-    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.15); /* Sombra a la izquierda */
-    overflow-y: auto; /* Añade scroll vertical si el contenido es muy largo */
-    z-index: 1005; /* Asegura que esté por encima de otros elementos como el globo o el icono */
-    transition: right 0.4s ease-in-out; /* Animación suave para deslizar */
-    box-sizing: border-box; /* Para que el padding no aumente el ancho total */
-}
-
-/* Clase que añadiremos con JS para mostrar el panel */
-#details-panel.panel-visible {
-    right: 0; /* Mueve el panel a la posición 0 (visible) */
-}
-
-/* Estilo para el botón de cierre del panel */
-.close-panel-button {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #aaaaaa;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.close-panel-button:hover {
-    color: #333333;
-}
-
-/* Estilos opcionales para el contenido dentro del panel */
-#details-panel h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-#details-panel p {
-    margin-bottom: 10px;
-    line-height: 1.5;
-    color: #555;
-}
-
-#details-panel hr {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 15px 0;
-}
-/* --- Fin Estilos Panel Lateral --- */
-
-
-/* --- Estilos para el Panel de Configuración (Popup) --- */
-
-.settings-popup {
-    position: fixed; /* Fijo en la pantalla */
-    bottom: 75px; /* Posición vertical (ajusta según veas encima del icono) */
-    right: 20px;  /* Alineado con el icono a la derecha */
-    width: 200px; /* Ancho del popup */
-    background-color: rgba(245, 245, 245, 0.97); /* Fondo ligeramente translúcido */
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    z-index: 1010; /* Asegura que esté sobre otros elementos */
-    box-sizing: border-box;
-
-    /* Oculto por defecto con transición de opacidad */
-    opacity: 0;
-    visibility: hidden; /* Mejor para accesibilidad que display:none con transition */
-    pointer-events: none; /* No se puede interactuar si está oculto */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-/* Clase para mostrar el popup (se añadirá/quitará con JS) */
-.settings-popup.settings-popup-visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto; /* Se puede interactuar cuando es visible */
-}
-
-/* Estilo para los botones dentro del popup */
-.settings-popup button {
-    display: block; /* Un botón por línea */
-    width: 100%;    /* Ocupa todo el ancho */
-    background: none; /* Sin fondo por defecto */
-    border: none;     /* Sin borde */
-    padding: 10px 12px; /* Espaciado interno */
-    margin: 0 0 5px 0; /* Margen inferior (excepto el último) */
-    text-align: left; /* Alineación del texto */
-    cursor: pointer;
-    color: #333;
-    font-size: 0.95em;
-    border-radius: 4px;
-    transition: background-color 0.2s ease; /* Transición suave al pasar el cursor */
-}
-
-.settings-popup button:last-child {
-    margin-bottom: 0; /* Quitar margen inferior al último botón */
-}
-
-.settings-popup button:hover {
-    background-color: rgba(0, 0, 0, 0.08); /* Fondo sutil al pasar el cursor */
-}
-
-/* Estilo para los iconos dentro de los botones */
-.settings-popup button i.fas { /* Selecciona los iconos Font Awesome dentro de los botones */
-    margin-right: 10px; /* Espacio entre icono y texto */
-    width: 16px;        /* Ancho fijo para alinear iconos */
-    text-align: center;
-    color: #555; /* Color ligeramente más oscuro para el icono */
-}
-
-/* --- Fin Estilos Panel Configuración --- */
+/* === Fin style.css === */
