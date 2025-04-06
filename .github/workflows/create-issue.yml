@@ -1,23 +1,29 @@
+# Nombre descriptivo del workflow
 name: Create Issue from Web Form
 
+# Trigger
 on:
   repository_dispatch:
     types: [new-actor-proposal]
 
+# Trabajos
 jobs:
   create_issue_job:
     name: Create GitHub Issue Job
     runs-on: ubuntu-latest
+    # Permisos necesarios
     permissions:
       issues: write
     steps:
+      # Paso 1: Checkout
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Paso 2: Formatear título y cuerpo (CON ETIQUETAS TRADUCIDAS)
       - name: Format Issue Content
         id: format
         run: |
-          # Script bash (extracción de variables NAME, TYPE, etc. igual que antes)
+          # Extraer variables (igual que antes)
           NAME="${{ github.event.client_payload.name }}"
           TYPE="${{ github.event.client_payload.type }}"
           CITY="${{ github.event.client_payload.city }}"
@@ -25,36 +31,37 @@ jobs:
           LAT="${{ github.event.client_payload.lat }}"
           LNG="${{ github.event.client_payload.lng }}"
           DESC="${{ github.event.client_payload.description }}"
+          # Título en inglés
           ISSUE_TITLE="New Actor Proposal: $NAME"
-          ISSUE_BODY=$(cat <<EOF
-          **Nueva Propuesta de Actor Recibida desde el Formulario Web:**
 
-          * **Nombre:** $NAME
-          * **Tipo:** $TYPE
-          * **Ciudad:** $CITY
-          * **País:** $COUNTRY
-          * **Latitud:** \`$LAT\`
-          * **Longitud:** \`$LNG\`
-          * **Descripción:**
+          # ----- ISSUE BODY CON ETIQUETAS EN INGLÉS -----
+          ISSUE_BODY=$(cat <<EOF
+          **New Actor Proposal Received from Web Form:**
+
+          * **Name:** $NAME
+          * **Type:** $TYPE
+          * **City:** $CITY
+          * **Country:** $COUNTRY
+          * **Latitude:** \`$LAT\`
+          * **Longitude:** \`$LNG\`
+          * **Description:**
               >$DESC
 
           ---
-          *Por favor, revisar y verificar esta información antes de añadirla a \`data/cardano-actors.json\`.*
+          *Please review and verify this information before adding it to \`data/cardano-actors.json\`.*
           EOF
           )
-          # Escapar '%' por si acaso
+          # -------------------------------------------
+
+          # Preparar outputs (escapar % y usar delimitador para multilinea)
           ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
-
-          # Guardar título (línea única)
           echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
-
-          # ---- CORRECCIÓN: Usar formato de delimitador para output multilinea ----
           echo "issue_body<<EOF" >> $GITHUB_OUTPUT
           echo "$ISSUE_BODY" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          # -------------------------------------------------------------------
         shell: bash
 
+      # Paso 3: Crear el Issue usando gh CLI (igual que antes)
       - name: Create GitHub Issue using gh CLI
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }}
