@@ -1,4 +1,4 @@
-/* === style.css === COMPLETO con Layout Sidebar === */
+/* === style.css === COMPLETO con Layout Sidebar y Responsividad === */
 
 /* --- 1. Base Theme & Variables --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
@@ -27,7 +27,7 @@ body {
   font-family: var(--font-family);
   font-weight: 300;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* Evita barras de scroll en el body en desktop */
   height: 100vh;
 }
 
@@ -43,7 +43,7 @@ body {
   height: 100%;
   position: relative;
   background-color: var(--bg-color);
-  overflow: hidden;
+  overflow: hidden; /* Evita que el canvas se desborde */
 }
 
 #globeViz {
@@ -68,6 +68,7 @@ body {
   box-sizing: border-box;
   z-index: 10;
   color: var(--text-color);
+  transition: width 0.3s ease; /* Añadir transición para cambios futuros */
 }
 
 /* Sección superior del sidebar */
@@ -76,7 +77,7 @@ body {
   overflow-y: auto;
   padding: 20px 25px;
   box-sizing: border-box;
-  /* Estilo Scrollbar */
+  /* Estilo Scrollbar Webkit */
   &::-webkit-scrollbar { width: 6px; }
   &::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 3px; }
   &::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 3px; }
@@ -102,83 +103,28 @@ body {
 /* --- 4. Overlays (Settings Icon, Settings Panel, Form Modal) --- */
 
 /* Settings Icon */
-#settings-icon { position: fixed; bottom: 20px; right: calc(var(--sidebar-width) + 20px); font-size: 1.5rem; cursor: pointer; z-index: 1001; background-color: rgba(15, 25, 40, 0.8); color: var(--accent-color); border: 1px solid var(--border-color); border-radius: 50%; padding: 8px 10px; line-height: 1; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+#settings-icon { position: fixed; bottom: 20px; right: calc(var(--sidebar-width) + 20px); font-size: 1.5rem; cursor: pointer; z-index: 1001; background-color: rgba(15, 25, 40, 0.8); color: var(--accent-color); border: 1px solid var(--border-color); border-radius: 50%; padding: 8px 10px; line-height: 1; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); transition: background-color 0.2s ease, box-shadow 0.2s ease, right 0.3s ease; /* Añadir transición a right */ }
 #settings-icon:hover { background-color: rgba(30, 45, 65, 0.9); box-shadow: 0 0 8px var(--accent-color); }
 
 /* Settings Panel (Popup) */
-.settings-popup { position: fixed; bottom: 75px; right: calc(var(--sidebar-width) + 20px); width: 200px; background-color: var(--panel-bg-color); border-radius: 4px; border: none; box-shadow: 0 0 15px var(--shadow-color), inset 0 0 1px var(--accent-color); padding: 10px; z-index: 1010; box-sizing: border-box; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
+.settings-popup { position: fixed; bottom: 75px; right: calc(var(--sidebar-width) + 20px); width: 200px; background-color: var(--panel-bg-color); border-radius: 4px; border: none; box-shadow: 0 0 15px var(--shadow-color), inset 0 0 1px var(--accent-color); padding: 10px; z-index: 1010; box-sizing: border-box; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease, right 0.3s ease; /* Añadir transición a right */ }
 .settings-popup.settings-popup-visible { opacity: 1; visibility: visible; pointer-events: auto; }
-/* Botones dentro del popup config */
+/* Botones internos */
 .settings-popup button { display: block; width: 100%; background: none; border: 1px solid transparent; padding: 10px 12px; margin: 0 0 5px 0; text-align: left; cursor: pointer; color: var(--text-color); font-family: var(--font-family); font-size: 0.9em; border-radius: 3px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
 .settings-popup button:last-child { margin-bottom: 0; }
 .settings-popup button:hover { background-color: var(--hover-bg-color); border-color: var(--border-color); color: var(--text-color-light); }
 .settings-popup button i.fas { margin-right: 10px; width: 16px; text-align: center; color: var(--accent-color); }
 
-/* --- NUEVO: Estilos para Grupo de Opciones (Fieldset/Radio) --- */
-.settings-group {
-  border: none; /* Quitar borde por defecto del fieldset */
-  padding: 0;
-  margin: 0;
-  margin-top: 15px; /* Espacio sobre el grupo */
-  padding-top: 10px; /* Espacio bajo la leyenda */
-  border-top: 1px solid var(--border-color); /* Línea divisoria superior */
-}
-
-.settings-group legend {
-  color: var(--accent-color);
-  font-size: 0.8em;
-  font-weight: 400;
-  padding: 0 5px; /* Espaciado alrededor del texto */
-  margin-left: 5px; /* Alineación */
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.radio-option {
-  display: flex; /* Alinear radio y label */
-  align-items: center;
-  margin-bottom: 8px;
-  cursor: pointer; /* Hacer toda la fila clickeable */
-  padding: 2px 5px; /* Ligero padding para hover */
-  border-radius: 3px;
-}
-.radio-option:last-child {
-    margin-bottom: 0;
-}
-.radio-option:hover {
-    background-color: var(--hover-bg-color); /* Efecto hover */
-}
-
-.radio-option input[type="radio"] {
-  margin: 0;
-  margin-right: 8px; /* Espacio entre radio y label */
-  cursor: pointer;
-  /* Intenta colorear el radio button nativo */
-  accent-color: var(--accent-color);
-  /* Para navegadores que no soportan accent-color, el default será visible */
-}
-
-.radio-option label {
-  margin: 0;
-  font-size: 0.9em;
-  cursor: pointer;
-  color: var(--text-color); /* Asegurar color texto */
-  font-weight: 300;
-  flex-grow: 1; /* Ocupa espacio restante */
-}
-/* --------------------------------------------------------- */
-
-
-/* --- 5. Form Modal --- */
-/* (Sin cambios en esta sección respecto a la versión anterior) */
+/* Form Modal */
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.8); animation-name: fadeIn; animation-duration: 0.4s; }
 .modal-content { background-color: var(--panel-bg-color); color: var(--text-color); border: none; box-shadow: 0 0 25px var(--shadow-color), inset 0 0 1px var(--accent-color); border-radius: 4px; margin: 8% auto; padding: 25px 35px; width: 85%; max-width: 650px; position: relative; animation-name: slideIn; animation-duration: 0.4s; }
 .close-button { color: #aaa; position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; line-height: 1; text-shadow: 0 1px 0 #000; cursor: pointer; }
 .close-button:hover, .close-button:focus { color: #fff; text-decoration: none; }
 .modal.modal-visible { display: block; }
-.modal-content h2 { color: var(--text-color-light); font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-top: 0px; margin-bottom: 25px; font-size: 1.4em; text-align: center; }
-.modal-content label { font-weight: 400; font-size: 0.9em; color: var(--accent-color); display: block; margin-bottom: 3px; }
-.modal-content small { font-size: 0.8em; color: #aaa; display: block; margin-top: 4px; }
+/* Estilos DENTRO del Formulario */
+ .modal-content h2 { color: var(--text-color-light); font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-top: 0px; margin-bottom: 25px; font-size: 1.4em; text-align: center; }
+ .modal-content label { font-weight: 400; font-size: 0.9em; color: var(--accent-color); display: block; margin-bottom: 3px; }
+ .modal-content small { font-size: 0.8em; color: #aaa; display: block; margin-top: 4px; }
 #form-modal input[type="text"], #form-modal input[type="number"], #form-modal input[type="url"], #form-modal select, #form-modal textarea { background-color: transparent; color: var(--text-color); border: none; border-bottom: 1px solid var(--border-color); padding: 10px 2px; border-radius: 0; margin-top: 0px; box-sizing: border-box; font-family: var(--font-family); font-size: 0.95em; width: 100%; transition: border-color 0.2s ease; }
 #form-modal select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300e0ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 10px top 50%; background-size: 10px auto; padding-right: 30px; }
 #form-modal select option { background-color: #1a2a45; color: var(--text-color); }
@@ -204,5 +150,68 @@ body {
 ::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; border: 1px solid rgba(0,0,0,0.3); }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--accent-color); }
 
+
+/* ========== NUEVO: Responsive Design (Mobile) ========== */
+@media (max-width: 768px) {
+  body {
+      overflow: auto; /* Permitir scroll en body en móvil si contenido excede */
+  }
+  #app-container {
+    flex-direction: column; /* Apila globo y sidebar */
+    height: auto; /* Altura basada en contenido */
+    min-height: 100vh;
+  }
+
+  #globe-area {
+    width: 100%;
+    height: 60vh; /* Globo ocupa el 60% de la altura */
+    flex-grow: 0; /* No necesita crecer */
+  }
+
+  #main-sidebar {
+    width: 100%; /* Ocupa todo el ancho */
+    height: auto; /* Altura automática */
+    min-height: 40vh; /* Altura mínima */
+    border-left: none; /* Quitar borde izquierdo */
+    border-top: 1px solid var(--border-color); /* Añadir borde superior */
+    box-shadow: 0 -5px 20px var(--shadow-color); /* Sombra arriba */
+  }
+
+  #sidebar-content {
+    padding: 15px; /* Menos padding en móvil */
+  }
+   #details-placeholder h3 { font-size: 1.1em; }
+   #details-placeholder p { font-size: 0.9em; }
+   .panel-links { font-size: 0.8em; }
+
+  #copilot-box {
+    height: 120px; /* Hacer caja copiloto más pequeña en móvil */
+  }
+
+  /* Re-posicionar icono y panel de configuración */
+  #settings-icon {
+    /* Mover a la esquina inferior derecha de la PANTALLA */
+    bottom: 15px;
+    right: 15px;
+    font-size: 1.3rem; /* Un poco más pequeño */
+  }
+  .settings-popup {
+     /* Mover encima del icono */
+    bottom: 65px; /* Ajustar si es necesario */
+    right: 15px;
+    width: 180px; /* Un poco más estrecho */
+  }
+
+  /* Ajustar tamaño/margen del modal del formulario */
+  .modal-content {
+    width: 95%;
+    margin: 5% auto; /* Menos margen superior/inferior */
+    padding: 20px; /* Menos padding */
+  }
+   .modal-content h2 { font-size: 1.3em; margin-bottom: 20px; }
+   #actor-form button[type="submit"] { padding: 8px 20px; margin-top: 20px; }
+
+}
+/* === Fin Responsive === */
 
 /* === Fin style.css === */
