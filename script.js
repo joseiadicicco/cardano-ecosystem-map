@@ -39,6 +39,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         <b>${d.name}</b> (${d.type})<br>
                         ${d.city}, ${d.country}
                     `);
+                    .onPointHover(point => {
+                        // Detenemos/Reanudamos la auto-rotación basado en si 'point' es null o no
+                        myGlobe.controls().autoRotate = (point === null);
+
+                        // Opcional: Log para depurar
+                        // if (point) { console.log("Hover sobre:", point.name); } else { console.log("Hover fuera"); }
+                    });
                 console.log("Puntos añadidos al globo.");
             })
             .catch(error => {
