@@ -92,3 +92,62 @@
     left: 0;
     z-index: 0; /* Asegura que esté detrás de todo */
 }
+
+/* --- Estilos para el Panel Lateral de Detalles --- */
+
+#details-panel {
+    position: fixed; /* Fijo en la pantalla, no se mueve con el scroll */
+    top: 0;
+    right: -350px; /* Empieza fuera de la pantalla a la derecha (ancho + un poco más) */
+    width: 320px; /* Ancho del panel */
+    max-width: 85%; /* Ancho máximo en pantallas pequeñas */
+    height: 100%; /* Altura completa de la ventana */
+    background-color: #fdfdfd; /* Un fondo casi blanco */
+    padding: 25px;
+    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.15); /* Sombra a la izquierda */
+    overflow-y: auto; /* Añade scroll vertical si el contenido es muy largo */
+    z-index: 1005; /* Asegura que esté por encima de otros elementos como el globo o el icono */
+    transition: right 0.4s ease-in-out; /* Animación suave para deslizar */
+    box-sizing: border-box; /* Para que el padding no aumente el ancho total */
+}
+
+/* Clase que añadiremos con JS para mostrar el panel */
+#details-panel.panel-visible {
+    right: 0; /* Mueve el panel a la posición 0 (visible) */
+}
+
+/* Estilo para el botón de cierre del panel */
+.close-panel-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaaaaa;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-panel-button:hover {
+    color: #333333;
+}
+
+/* Estilos opcionales para el contenido dentro del panel */
+#details-panel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#details-panel p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    color: #555;
+}
+
+#details-panel hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+/* --- Fin Estilos Panel Lateral --- */
