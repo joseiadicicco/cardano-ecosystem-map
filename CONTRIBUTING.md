@@ -31,6 +31,10 @@ Each actor in the `data/cardano-actors.json` file is a JSON object with the foll
 * `country` (String): Country of location. (Required)
 * `description` (String): Brief description (1-2 sentences) about the actor or their relevance to Cardano. (Required)
 * *(Optional: We might add `url` (String) for a web link, `twitter` (String) for the handle, etc., in the future).*
+* `description` (String): Brief description (1-2 sentences)... (Required)
+* `twitter` (String): The actor's Twitter handle (username **without** the leading '@'). (Optional)
+* `website` (String): The actor's main website URL (including `https://` or `http://`). (Optional)
+* `relationship_codes` (Array of numbers/strings): List of codes representing groups or connections this actor belongs to (for future visualization). (Optional)
 
 **Important:** Ensure the entire `cardano-actors.json` file remains valid JSON after your changes. You can use an online JSON validator if unsure.
 

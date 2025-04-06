@@ -1,47 +1,217 @@
 [
-    {
-      "lat": 51.5074,
-      "lng": -0.1278,
-      "name": "Charles Hoskinson (Visita)",
-      "type": "Founder",
-      "city": "Londres",
-      "country": "UK",
-      "description": "Co-fundador de Cardano (Ubicación simbólica/evento)."
-    },
-    {
-      "lat": -34.6037,
-      "lng": -58.3816,
-      "name": "Cardano Hub LATAM",
-      "type": "Hub",
-      "city": "Buenos Aires",
-      "country": "Argentina",
-      "description": "Centro de actividad para la comunidad de América Latina."
-    },
-    {
-      "lat": 35.6895,
-      "lng": 139.6917,
-      "name": "Universidad de Tokio (Investigación)",
-      "type": "University",
-      "city": "Tokio",
-      "country": "Japón",
-      "description": "Colaboraciones académicas e investigación en blockchain."
-    },
-    {
-      "lat": 40.7128,
-      "lng": -74.0060,
-      "name": "Proyecto DeFi XYZ",
-      "type": "Project",
-      "city": "Nueva York",
-      "country": "USA",
-      "description": "Un proyecto innovador construido sobre Cardano."
-    },
-    {
-      "lat": 6.5244,
-      "lng": 3.3792,
-      "name": "Ambassador Lagos",
-      "type": "Ambassador",
-      "city": "Lagos",
-      "country": "Nigeria",
-      "description": "Embajador promoviendo Cardano en África Occidental."
-    }
-  ]
+  {
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "name": "Charles Hoskinson (Visit)",
+    "type": "Founder",
+    "city": "London",
+    "country": "UK",
+    "description": "Co-founder of Cardano (Symbolic location/event).",
+    "twitter": "IOHK_Charles",
+    "website": "https://charleshoskinson.com/",
+    "relationship_codes": []
+  },
+  {
+    "lat": -34.6037,
+    "lng": -58.3816,
+    "name": "Cardano Hub LATAM (Buenos Aires)",
+    "type": "Hub",
+    "city": "Buenos Aires",
+    "country": "Argentina",
+    "description": "Community hub for Latin America.",
+    "twitter": "CardanoHubLATAM",
+    "website": "",
+    "relationship_codes": [
+      70
+    ]
+  },
+  {
+    "lat": 35.6895,
+    "lng": 139.6917,
+    "name": "University of Tokyo (Research)",
+    "type": "University",
+    "city": "Tokyo",
+    "country": "Japan",
+    "description": "Academic collaborations and blockchain research.",
+    "twitter": "",
+    "website": null,
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "name": "Project DeFi XYZ (New York)",
+    "type": "Project",
+    "city": "New York",
+    "country": "USA",
+    "description": "An innovative project built on Cardano.",
+    "twitter": "ProjectDeFiXYZ",
+    "website": "https://example-defi.com",
+    "relationship_codes": []
+  },
+  {
+    "lat": 6.5244,
+    "lng": 3.3792,
+    "name": "Ambassador Lagos",
+    "type": "Ambassador",
+    "city": "Lagos",
+    "country": "Nigeria",
+    "description": "Ambassador promoting Cardano in West Africa.",
+    "twitter": "",
+    "website": "",
+    "relationship_codes": []
+  },
+  {
+    "lat": 47.3769,
+    "lng": 8.5417,
+    "name": "ETH Zurich (Blockchain Lab)",
+    "type": "University",
+    "city": "Zurich",
+    "country": "Switzerland",
+    "description": "Leading European university involved in blockchain research.",
+    "twitter": "ETH_en",
+    "website": "https://ethz.ch",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": -1.2921,
+    "lng": 36.8219,
+    "name": "Cardano Hub Nairobi",
+    "type": "Hub",
+    "city": "Nairobi",
+    "country": "Kenya",
+    "description": "Fostering the Cardano community in East Africa.",
+    "twitter": "CardanoNairobi",
+    "website": null,
+    "relationship_codes": [
+      70
+    ]
+  },
+  {
+    "lat": 47.3780,
+    "lng": 8.5430,
+    "name": "Project Hydra Scale (Zurich)",
+    "type": "Project",
+    "city": "Zurich",
+    "country": "Switzerland",
+    "description": "Research project on scalability solutions, linked to ETH and Hubs.",
+    "twitter": "",
+    "website": "",
+    "relationship_codes": [
+      25,
+      70
+    ]
+  },
+  {
+    "lat": -15.7942,
+    "lng": -47.8825,
+    "name": "Ambassador Brasilia",
+    "type": "Ambassador",
+    "city": "Brasilia",
+    "country": "Brazil",
+    "description": "Cardano Ambassador in Brazil.",
+    "twitter": "",
+    "website": "",
+    "relationship_codes": []
+  },
+  {
+    "lat": -33.8688,
+    "lng": 151.2093,
+    "name": "Aussie Stake Pool [AUSPL]",
+    "type": "SPO",
+    "city": "Sydney",
+    "country": "Australia",
+    "description": "A reliable Cardano stake pool operator based in Australia.",
+    "twitter": "AussieStake",
+    "website": "https://aussiestake.example.com",
+    "relationship_codes": []
+  },
+  {
+    "lat": -34.6082,
+    "lng": -58.4304,
+    "name": "UTN Buenos Aires (FRBA)",
+    "type": "University",
+    "city": "Buenos Aires",
+    "country": "Argentina",
+    "description": "Facultad Regional Buenos Aires - Universidad Tecnológica Nacional.",
+    "twitter": "UTN_BA",
+    "website": "https://www.frba.utn.edu.ar/",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": 9.9350,
+    "lng": -84.0780,
+    "name": "UNED Costa Rica",
+    "type": "University",
+    "city": "San José (Approx.)",
+    "country": "Costa Rica",
+    "description": "Universidad Estatal a Distancia, involved in blockchain education.",
+    "twitter": "unedcostarica",
+    "website": "https://www.uned.ac.cr/",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": -33.4171,
+    "lng": -70.5049,
+    "name": "Universidad Adolfo Ibáñez (Santiago)",
+    "type": "University",
+    "city": "Santiago",
+    "country": "Chile",
+    "description": "University with initiatives related to blockchain technology.",
+    "twitter": "UAI_CL",
+    "website": "https://www.uai.cl/",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": 55.9445,
+    "lng": -3.1890,
+    "name": "University of Edinburgh (Blockchain Lab)",
+    "type": "University",
+    "city": "Edinburgh",
+    "country": "UK",
+    "description": "Home to a well-known blockchain laboratory collaborating with Cardano.",
+    "twitter": "EdinburghUni",
+    "website": "https://www.ed.ac.uk/",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": -22.9785,
+    "lng": -43.2330,
+    "name": "PUC-Rio (Computer Science)",
+    "type": "University",
+    "city": "Rio de Janeiro",
+    "country": "Brazil",
+    "description": "Pontifícia Universidade Católica do Rio de Janeiro, exploring blockchain.",
+    "twitter": "PUCRio",
+    "website": "https://www.puc-rio.br/en/",
+    "relationship_codes": [
+      25
+    ]
+  },
+  {
+    "lat": -25.3326,
+    "lng": -57.5180,
+    "name": "Universidad Nacional de Asunción (FP-UNA)",
+    "type": "University",
+    "city": "San Lorenzo",
+    "country": "Paraguay",
+    "description": "Facultad Politécnica de la UNA, potential hub for blockchain studies.",
+    "twitter": "unapy",
+    "website": "https://www.una.py/",
+    "relationship_codes": [
+      25
+    ]
+  }
+]

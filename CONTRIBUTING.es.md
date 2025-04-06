@@ -29,8 +29,10 @@ Cada actor en el archivo `data/cardano-actors.json` es un objeto JSON con los si
 * `type` (Texto): Categoría del actor. Valores válidos actuales: `Founder`, `Hub`, `University`, `Project`, `Ambassador`. (Esta lista puede crecer). (Obligatorio)
 * `city` (Texto): Ciudad principal de ubicación. (Obligatorio)
 * `country` (Texto): País de ubicación. (Obligatorio)
-* `description` (Texto): Descripción breve (1-2 frases) sobre el actor o su relevancia en Cardano. (Obligatorio)
-* *(Opcional: podríamos añadir `url` (Texto) para un enlace web, `twitter` (Texto) para el handle, etc. en el futuro).*
+* `description` (Texto): Descripción breve (1-2 frases)... (Obligatorio)
+* `twitter` (Texto): El nombre de usuario de Twitter del actor (**sin** la '@' inicial). (Opcional)
+* `website` (Texto): La URL del sitio web principal del actor (incluyendo `https://` o `http://`). (Opcional)
+* `relationship_codes` (Array de números/textos): Lista de códigos que representan grupos o conexiones a los que pertenece este actor (para visualización futura). (Opcional)
 
 **Importante:** Asegúrate de que el archivo `cardano-actors.json` completo siga siendo un JSON válido después de tus cambios. Puedes usar un validador de JSON online si tienes dudas.
 
