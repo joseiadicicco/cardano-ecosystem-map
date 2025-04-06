@@ -1,4 +1,4 @@
-// === script.js === FINAL con Switch Textura Globo ===
+// === script.js === FINAL CONSOLIDADO ===
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log("DOM completamente cargado.");
 
@@ -9,22 +9,39 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // --- 2. Definición de Funciones Auxiliares ---
 
-    function openModal() { /* ... sin cambios ... */
+    // Función para abrir el modal del formulario
+    function openModal() {
         const formModal = document.getElementById('form-modal');
-        if (formModal) formModal.classList.add('modal-visible');
-        else console.error("formModal no encontrado.");
+        if (formModal) {
+            formModal.classList.add('modal-visible');
+        } else {
+            console.error("Intento de abrir modal, pero formModal no encontrado.");
+        }
     }
-    function closeModal() { /* ... sin cambios ... */
+
+    // Función para cerrar el modal del formulario
+    function closeModal() {
         const formModal = document.getElementById('form-modal');
-        if (formModal) formModal.classList.remove('modal-visible');
-        else console.error("formModal no encontrado.");
+        if (formModal) {
+            formModal.classList.remove('modal-visible');
+        } else {
+            console.error("Intento de cerrar modal, pero formModal no encontrado.");
+        }
     }
-    function toggleSettingsPanel() { /* ... sin cambios ... */
+
+    // Función para mostrar/ocultar el panel de configuración
+    function toggleSettingsPanel() {
         const settingsPanel = document.getElementById('settings-panel');
-        if (settingsPanel) settingsPanel.classList.toggle('settings-popup-visible');
-        else console.error("settingsPanel no encontrado.");
+        if (settingsPanel) {
+            settingsPanel.classList.toggle('settings-popup-visible');
+        } else {
+            console.error("Intento de toggle panel config, pero settingsPanel no encontrado.");
+        }
     }
-    function toggleAutoRotation() { /* ... sin cambios ... */
+
+    // Función para detener/reanudar la rotación del globo (actualiza estado manual)
+    function toggleAutoRotation() {
+        // Aseguramos que toggleRotationBtn se busque aquí por si acaso
         const toggleRotationBtn = document.getElementById('toggle-rotation-btn');
         if (myGlobe && myGlobe.controls && toggleRotationBtn) {
             const isCurrentlyRotating = myGlobe.controls().autoRotate;
@@ -36,20 +53,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
         } else { console.error("No se puede cambiar la rotación."); }
     }
 
-    // --- NUEVO: Función para actualizar la textura del globo ---
+    // Función para actualizar la textura del globo
     function updateGlobeTexture(mode) {
-        // Verifica si el globo está inicializado y tiene el método necesario
         if (!myGlobe || typeof myGlobe.globeImageUrl !== 'function') {
             console.error("myGlobe no está listo o no soporta globeImageUrl.");
             return;
         }
-        // Mapeo de modos a URLs de texturas
         const textureUrls = {
             day: '//unpkg.com/three-globe/example/img/earth-day.jpg',
             night: '//unpkg.com/three-globe/example/img/earth-night.jpg',
             blue: '//unpkg.com/three-globe/example/img/earth-blue-marble.jpg'
         };
-        // Si el modo es válido, cambia la textura y actualiza el estado
         if (textureUrls[mode]) {
             myGlobe.globeImageUrl(textureUrls[mode]);
             currentGlobeMode = mode; // Actualizar estado global
@@ -59,8 +73,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
+
     // --- 3. Obtención de Referencias a Elementos del DOM ---
-    // (Se añaden referencias a los radio buttons)
     const globeContainer = document.getElementById('globeViz');
     const globeArea = document.getElementById('globe-area');
     const settingsIcon = document.getElementById('settings-icon');
@@ -71,6 +85,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const closeFormModalButton = formModal ? formModal.querySelector('.close-button') : null;
     const actorForm = document.getElementById('actor-form');
     const submitButton = actorForm ? actorForm.querySelector('button[type="submit"]') : null;
+    // Elementos DENTRO del Sidebar
     const panelName = document.getElementById('panel-name');
     const panelType = document.getElementById('panel-type');
     const panelCity = document.getElementById('panel-city');
@@ -80,11 +95,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const panelTwitterLink = document.getElementById('panel-twitter-link');
     const panelWebsiteContainer = document.getElementById('panel-website-container');
     const panelWebsiteLink = document.getElementById('panel-website-link');
-    // --- NUEVO: Referencias a los radio buttons ---
+    // Radio buttons de vista
     const viewDayRadio = document.getElementById('view-day');
     const viewNightRadio = document.getElementById('view-night');
     const viewBlueRadio = document.getElementById('view-blue');
-    // Agruparlos para añadir listeners fácilmente
     const globeModeRadios = [viewDayRadio, viewNightRadio, viewBlueRadio];
 
 
@@ -101,18 +115,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }[currentGlobeMode]; // Obtiene la URL para 'day' inicialmente
 
         myGlobe(globeContainer)
-            .globeImageUrl(initialTextureUrl) // <-- Usa textura inicial correcta
+            .globeImageUrl(initialTextureUrl) // Textura inicial
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .backgroundColor('rgba(0,0,0,0)')
             .atmosphereColor('#00e0ff')
-            .atmosphereAltitude(0.15);
+            .atmosphereAltitude(0.15)
+            .showGraticules(false); // <-- Asegurarnos que las gratículas estén desactivadas por defecto
 
-        // Habilitar Auto-Rotación Inicial (sin cambios)
-        try { if (myGlobe.controls) { myGlobe.controls().autoRotate = true; myGlobe.controls().autoRotateSpeed = 0.25; console.log("Auto-rotación habilitada."); if(toggleRotationBtn) toggleRotationBtn.innerHTML = '<i class="fas fa-pause"></i> Stop Rotation'; } } catch (e) { console.error("Error al habilitar auto-rotación:", e); }
+        // Habilitar Auto-Rotación Inicial
+        try {
+            if (myGlobe.controls) {
+                myGlobe.controls().autoRotate = true;
+                myGlobe.controls().autoRotateSpeed = 0.25;
+                console.log("Auto-rotación habilitada inicialmente.");
+                if(toggleRotationBtn) toggleRotationBtn.innerHTML = '<i class="fas fa-pause"></i> Stop Rotation';
+            }
+        } catch (e) { console.error("Error al habilitar auto-rotación inicial:", e); }
         console.log("Instancia de Globe.gl creada...");
 
-        // Trigger para re-centrar/redimensionar (sin cambios)
-        setTimeout(() => { /* ... resize logic ... */ }, 150);
+        // Trigger para re-centrar/redimensionar el globo
+        setTimeout(() => {
+            if (globeArea && myGlobe && typeof myGlobe.width === 'function' && typeof myGlobe.height === 'function') {
+                const width = globeArea.offsetWidth;
+                const height = globeArea.offsetHeight;
+                if (width > 0 && height > 0) {
+                    myGlobe.width(width);
+                    myGlobe.height(height);
+                    console.log(`Globe dimensions set explicitly after delay: ${width}x${height}`);
+                } else { console.warn("Globe area dimensions are zero after delay, skipping resize."); }
+            } else { console.error("Cannot resize globe after delay: globeArea or myGlobe or methods not found."); }
+        }, 500); // Retraso aumentado
 
         // Carga de Datos y Configuración de Puntos/Interacciones
         fetch('data/cardano-actors.json')
@@ -122,46 +154,80 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 myGlobe
                     .pointsData(actorsData)
                     .pointLat('lat').pointLng('lng').pointRadius(0.2)
-                    .pointColor(d => { /* ... color logic ... */ })
-                    .pointLabel(d => `...`)
-                    .onPointHover(point => { /* ... hover logic ... */ })
-                    .onPointClick(point => { /* ... click logic ... */ });
+                    .pointColor(d => { // Lógica de color por tipo
+                        const colorMap = {'Founder':'#FFD700','Hub':'#FFA500','University':'#42A5F5','Project':'#AB47BC','Ambassador':'#FFFFFF','SPO':'#EF5350','default':'#BDBDBD'};
+                        return colorMap[d.type] || colorMap['default'];
+                     })
+                    .pointLabel(d => `<b>${d.name}</b> (${d.type})<br>${d.city}, ${d.country}`)
+                    .onPointHover(point => { // Lógica hover refinada
+                        if (myGlobe && myGlobe.controls) { if (point !== null) { myGlobe.controls().autoRotate = false; } else { if (!isRotationManuallyPaused) { myGlobe.controls().autoRotate = true; } } }
+                     })
+                    .onPointClick(point => { // Lógica click para actualizar sidebar
+                        if (point) {
+                            console.log("Punto clicado:", point);
+                            if(panelName) panelName.textContent = point.name || 'N/A';
+                            if(panelType) panelType.textContent = point.type || 'N/A';
+                            if(panelCity) panelCity.textContent = point.city || '';
+                            if(panelCountry) panelCountry.textContent = point.country || '';
+                            if(panelDescription) panelDescription.textContent = point.description || 'No description available.';
+                            // Twitter/Website logic...
+                            if (panelTwitterContainer && panelTwitterLink) { if (point.twitter && point.twitter.trim() !== "") { const twitterUrl = `https://twitter.com/${point.twitter}`; panelTwitterLink.href = twitterUrl; panelTwitterLink.textContent = `@${point.twitter}`; panelTwitterContainer.style.display = 'block'; } else { panelTwitterContainer.style.display = 'none'; } } if (panelWebsiteContainer && panelWebsiteLink) { if (point.website && point.website.trim() !== "") { panelWebsiteLink.href = point.website; try { const url = new URL(point.website); panelWebsiteLink.textContent = url.hostname + (url.pathname === '/' ? '' : url.pathname.replace(/\/$/, '')); } catch (_) { panelWebsiteLink.textContent = point.website; } panelWebsiteContainer.style.display = 'block'; } else { panelWebsiteContainer.style.display = 'none'; } }
+                        }
+                    });
                 console.log("Puntos y sus interacciones configurados...");
                 // updateArcs(); // Llamada inicial para arcos (futuro)
             })
-            .catch(error => { console.error('Error fatal al cargar datos:', error); });
-    } else { console.error("Error: #globeViz no encontrado."); }
+            .catch(error => { console.error('Error fatal al cargar o procesar datos:', error); });
+    } else { console.error("Error: #globeViz o #globeArea no encontrado."); }
 
 
     // --- 5. Añadir Event Listeners para UI ---
-    // Listeners para icono config, botones panel config (openSubmit, toggleRotation), cierres modales/paneles (sin cambios)
-    if (settingsIcon) { settingsIcon.addEventListener('click', toggleSettingsPanel); } else { console.warn("settingsIcon no encontrado."); }
-    if (openSubmitFormBtn) { openSubmitFormBtn.addEventListener('click', () => { openModal(); toggleSettingsPanel(); }); } else { console.warn("openSubmitFormBtn no encontrado."); }
-    if (toggleRotationBtn) { toggleRotationBtn.addEventListener('click', toggleAutoRotation); } else { console.warn("toggleRotationBtn no encontrado."); }
-    if (closeFormModalButton) { closeFormModalButton.addEventListener('click', closeModal); } else { console.warn("closeButton (modal form) no encontrado."); }
-    if (formModal) { formModal.addEventListener('click', (event) => { if (event.target === formModal) closeModal(); }); } else { console.warn("formModal no encontrado."); }
+    // Listener icono Configuración -> toggleSettingsPanel
+    if (settingsIcon) { settingsIcon.addEventListener('click', toggleSettingsPanel); }
+    else { console.warn("Elemento settingsIcon no encontrado."); }
 
-    // --- NUEVO: Listeners para los radio buttons de vista ---
+    // Listeners botones Panel Configuración
+    if (openSubmitFormBtn) { openSubmitFormBtn.addEventListener('click', () => { openModal(); toggleSettingsPanel(); }); }
+    else { console.warn("Botón openSubmitFormBtn no encontrado."); }
+    if (toggleRotationBtn) { toggleRotationBtn.addEventListener('click', toggleAutoRotation); }
+    else { console.warn("Botón toggleRotationBtn no encontrado."); }
+
+    // Listeners para los radio buttons de vista
     globeModeRadios.forEach(radio => {
-        // Asegurarse que el elemento existe antes de añadir listener
         if (radio) {
             radio.addEventListener('change', (event) => {
-                // event.target es el radio button que cambió
                 const newMode = event.target.value;
-                // Verificamos que esté marcado y sea diferente al modo actual
                 if (event.target.checked && newMode !== currentGlobeMode) {
-                    updateGlobeTexture(newMode); // Llamamos a la función para cambiar la textura
+                    updateGlobeTexture(newMode); // Llama a la función para cambiar la textura
                 }
             });
-        } else {
-            console.warn("Uno de los radio buttons de vista ('view-day', 'view-night', 'view-blue') no fue encontrado.");
-        }
+        } else { console.warn("Uno de los radio buttons de vista no fue encontrado."); }
     });
-    // ---------------------------------------------------
 
-    // Listener para el envío del formulario (sin cambios)
-    if (actorForm && submitButton) { actorForm.addEventListener('submit', async function(event) { /* ... submit logic ... */ }); }
-    else { /* ... error logs ... */ }
+    // Listeners para cerrar modales
+    if (closeFormModalButton) { closeFormModalButton.addEventListener('click', closeModal); }
+    else { console.warn("Elemento closeButton (modal form) no encontrado."); }
+    if (formModal) { formModal.addEventListener('click', (event) => { if (event.target === formModal) closeModal(); }); }
+    else { console.warn("Elemento formModal no encontrado."); }
+
+    // Listener para el envío del formulario
+    if (actorForm && submitButton) {
+        actorForm.addEventListener('submit', async function(event) {
+             event.preventDefault(); console.log("Formulario enviado..."); submitButton.disabled = true; submitButton.textContent = 'Sending...';
+            try {
+                const formData = { name: document.getElementById('form-name').value, type: document.getElementById('form-type').value, city: document.getElementById('form-city').value, country: document.getElementById('form-country').value, lat: document.getElementById('form-lat').value, lng: document.getElementById('form-lng').value, description: document.getElementById('form-description').value, twitter: document.getElementById('form-twitter').value.trim(), website: document.getElementById('form-website').value.trim() };
+                console.log("Datos a enviar:", formData); const apiUrl = '/api/submit-proposal';
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+                const result = await response.json();
+                if (response.ok) { console.log("Respuesta exitosa del servidor:", result); alert(`Success: ${result.message || 'Proposal submitted successfully.'}`); actorForm.reset();
+                } else { console.error("Error en la respuesta del servidor:", result); alert(`Error: ${result.message || 'Could not submit proposal.'}`); }
+            } catch (error) { console.error("Error al enviar el formulario (fetch catch):", error); alert("Network error trying to submit proposal. Please try again.");
+            } finally { submitButton.disabled = false; submitButton.textContent = 'Submit Proposal'; closeModal(); }
+        });
+    } else {
+        if (!actorForm) console.error("Error: No se encontró el formulario con id 'actor-form'.");
+        if (!submitButton) console.error("Error: No se encontró el botón de envío dentro del formulario.");
+    }
 
 }); // <<< FIN DOMContentLoaded
 

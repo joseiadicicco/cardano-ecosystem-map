@@ -1,23 +1,23 @@
-/* === style.css === COMPLETO con Layout Sidebar y Responsividad === */
+/* === style.css === FINAL CONSOLIDADO === */
 
 /* --- 1. Base Theme & Variables --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
 :root {
-  --bg-color: #0a0f1a;
-  --text-color: #e0e0e0;
-  --text-color-light: #ffffff;
-  --accent-color: #00e0ff;
-  --panel-bg-color: rgba(15, 25, 40, 0.9);
-  --input-bg-color: rgba(10, 15, 26, 0.9);
-  --border-color: rgba(0, 224, 255, 0.3);
-  --border-color-focus: rgba(0, 224, 255, 0.8);
-  --hover-bg-color: rgba(0, 224, 255, 0.1);
-  --shadow-color: rgba(0, 224, 255, 0.2);
-  --divider-glow-color: rgba(0, 224, 255, 0.5);
-  --error-color: #EF5350;
-  --font-family: 'Roboto Mono', monospace;
-  --sidebar-width: 350px;
+  --bg-color: #0a0f1a; /* Azul muy oscuro / casi negro */
+  --text-color: #e0e0e0; /* Gris muy claro / casi blanco */
+  --text-color-light: #ffffff; /* Blanco puro para títulos */
+  --accent-color: #00e0ff; /* Cian brillante */
+  --panel-bg-color: rgba(15, 25, 40, 0.9); /* Azul oscuro semi-transparente */
+  --input-bg-color: rgba(10, 15, 26, 0.9); /* Fondo oscuro para inputs */
+  --border-color: rgba(0, 224, 255, 0.3); /* Borde cian tenue */
+  --border-color-focus: rgba(0, 224, 255, 0.8); /* Borde cian más brillante en focus */
+  --hover-bg-color: rgba(0, 224, 255, 0.1); /* Fondo sutil cian en hover */
+  --shadow-color: rgba(0, 224, 255, 0.2); /* Sombra/Glow cian (más sutil) */
+  --divider-glow-color: rgba(0, 224, 255, 0.5); /* Color para brillo de divisores */
+  --error-color: #EF5350; /* Rojo para errores (si se usa) */
+  --font-family: 'Roboto Mono', monospace; /* Fuente monoespaciada */
+  --sidebar-width: 350px; /* Ancho de la barra lateral */
 }
 
 /* Estilos globales del body */
@@ -39,11 +39,11 @@ body {
 }
 
 #globe-area {
-  flex-grow: 1;
+  flex-grow: 1; /* Ocupa el espacio restante */
   height: 100%;
   position: relative;
-  background-color: var(--bg-color);
-  overflow: hidden; /* Evita que el canvas se desborde */
+  background-color: var(--bg-color); /* Fondo mientras carga el globo */
+  overflow: hidden; /* Evita que el canvas se desborde visualmente */
 }
 
 #globeViz {
@@ -59,14 +59,16 @@ body {
 #main-sidebar {
   width: var(--sidebar-width);
   height: 100vh;
-  background-color: var(--panel-bg-color);
-  border: none;
-  box-shadow: -5px 0 20px var(--shadow-color), inset 1px 0 0 var(--border-color);
+  background-color: var(--panel-bg-color); /* Usa el fondo actualizado */
+  border: none; /* Sin borde */
+  /* Efecto glow en lugar de borde */
+  box-shadow: -5px 0 20px var(--shadow-color),
+              inset 1px 0 0 var(--border-color); /* Línea interior sutil */
   display: flex;
   flex-direction: column;
   padding: 0;
   box-sizing: border-box;
-  z-index: 10;
+  z-index: 10; /* Encima del globo */
   color: var(--text-color);
   transition: width 0.3s ease; /* Añadir transición para cambios futuros */
 }
@@ -85,9 +87,20 @@ body {
 }
 
 /* Contenido de detalles */
-#details-placeholder h3 { color: var(--text-color-light); font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 5px; margin-bottom: 15px; font-size: 1.2em; }
-#details-placeholder p { margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; }
-#details-placeholder hr { border: none; height: 1px; background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent); box-shadow: 0 0 4px var(--shadow-color); margin: 20px 5px; }
+#details-placeholder h3 {
+    color: var(--text-color-light); font-weight: 400;
+    border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
+    margin-top: 5px; margin-bottom: 15px; font-size: 1.2em;
+ }
+#details-placeholder p {
+    margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; /* Tamaño ajustado */
+}
+#details-placeholder hr { /* Divisor con glow */
+    border: none; height: 1px;
+    background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent);
+    box-shadow: 0 0 4px var(--shadow-color);
+    margin: 20px 5px;
+ }
 #details-placeholder strong { font-weight: 400; color: var(--accent-color); margin-right: 5px; }
 .panel-links { margin-top: 15px; font-size: 0.9em; }
 .panel-links a { word-break: break-all; color: var(--accent-color); text-decoration: none;}
@@ -95,19 +108,40 @@ body {
 .panel-links p { margin-bottom: 8px; }
 
 /* Sección inferior (Caja Copiloto) */
-#copilot-box { height: 197px; flex-shrink: 0; border-top: none; position: relative; display: flex; align-items: center; justify-content: center; padding: 10px; box-sizing: border-box; color: #666; font-size: 0.9em; background-color: rgba(0,0,0,0.2); }
-#copilot-box::before { content: ''; position: absolute; top: 0; left: 5%; right: 5%; height: 1px; background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent); box-shadow: 0 0 4px var(--shadow-color); }
+#copilot-box {
+  height: 197px; /* Altura 16:9 */
+  flex-shrink: 0; border-top: none; position: relative; display: flex;
+  align-items: center; justify-content: center; padding: 10px; box-sizing: border-box;
+  color: #666; font-size: 0.9em; background-color: rgba(0,0,0,0.2);
+}
+#copilot-box::before { /* Divisor superior con glow */
+    content: ''; position: absolute; top: 0; left: 5%; right: 5%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent);
+    box-shadow: 0 0 4px var(--shadow-color);
+}
 #copilot-box span { font-style: italic; }
 
 
 /* --- 4. Overlays (Settings Icon, Settings Panel, Form Modal) --- */
 
 /* Settings Icon */
-#settings-icon { position: fixed; bottom: 20px; right: calc(var(--sidebar-width) + 20px); font-size: 1.5rem; cursor: pointer; z-index: 1001; background-color: rgba(15, 25, 40, 0.8); color: var(--accent-color); border: 1px solid var(--border-color); border-radius: 50%; padding: 8px 10px; line-height: 1; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); transition: background-color 0.2s ease, box-shadow 0.2s ease, right 0.3s ease; /* Añadir transición a right */ }
+#settings-icon {
+    position: fixed; bottom: 20px; right: calc(var(--sidebar-width) + 20px);
+    font-size: 1.5rem; cursor: pointer; z-index: 1001; background-color: rgba(15, 25, 40, 0.8);
+    color: var(--accent-color); border: 1px solid var(--border-color); border-radius: 50%;
+    padding: 8px 10px; line-height: 1; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, right 0.3s ease; /* Añadir transición a right */
+}
 #settings-icon:hover { background-color: rgba(30, 45, 65, 0.9); box-shadow: 0 0 8px var(--accent-color); }
 
 /* Settings Panel (Popup) */
-.settings-popup { position: fixed; bottom: 75px; right: calc(var(--sidebar-width) + 20px); width: 200px; background-color: var(--panel-bg-color); border-radius: 4px; border: none; box-shadow: 0 0 15px var(--shadow-color), inset 0 0 1px var(--accent-color); padding: 10px; z-index: 1010; box-sizing: border-box; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease, right 0.3s ease; /* Añadir transición a right */ }
+.settings-popup {
+    position: fixed; bottom: 75px; right: calc(var(--sidebar-width) + 20px);
+    width: 200px; background-color: var(--panel-bg-color); border-radius: 4px; border: none;
+    box-shadow: 0 0 15px var(--shadow-color), inset 0 0 1px var(--accent-color);
+    padding: 10px; z-index: 1010; box-sizing: border-box; opacity: 0;
+    visibility: hidden; pointer-events: none; transition: opacity 0.3s ease, visibility 0.3s ease, right 0.3s ease; /* Añadir transición a right */
+}
 .settings-popup.settings-popup-visible { opacity: 1; visibility: visible; pointer-events: auto; }
 /* Botones internos */
 .settings-popup button { display: block; width: 100%; background: none; border: 1px solid transparent; padding: 10px 12px; margin: 0 0 5px 0; text-align: left; cursor: pointer; color: var(--text-color); font-family: var(--font-family); font-size: 0.9em; border-radius: 3px; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
@@ -118,19 +152,24 @@ body {
 /* Form Modal */
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.8); animation-name: fadeIn; animation-duration: 0.4s; }
 .modal-content { background-color: var(--panel-bg-color); color: var(--text-color); border: none; box-shadow: 0 0 25px var(--shadow-color), inset 0 0 1px var(--accent-color); border-radius: 4px; margin: 8% auto; padding: 25px 35px; width: 85%; max-width: 650px; position: relative; animation-name: slideIn; animation-duration: 0.4s; }
+/* Botón de cierre (X) del modal */
 .close-button { color: #aaa; position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; line-height: 1; text-shadow: 0 1px 0 #000; cursor: pointer; }
 .close-button:hover, .close-button:focus { color: #fff; text-decoration: none; }
+/* Clase para mostrar el modal */
 .modal.modal-visible { display: block; }
-/* Estilos DENTRO del Formulario */
+
+/* Estilos para elementos DENTRO del Formulario */
  .modal-content h2 { color: var(--text-color-light); font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-top: 0px; margin-bottom: 25px; font-size: 1.4em; text-align: center; }
  .modal-content label { font-weight: 400; font-size: 0.9em; color: var(--accent-color); display: block; margin-bottom: 3px; }
  .modal-content small { font-size: 0.8em; color: #aaa; display: block; margin-top: 4px; }
+/* Inputs, Select, Textarea */
 #form-modal input[type="text"], #form-modal input[type="number"], #form-modal input[type="url"], #form-modal select, #form-modal textarea { background-color: transparent; color: var(--text-color); border: none; border-bottom: 1px solid var(--border-color); padding: 10px 2px; border-radius: 0; margin-top: 0px; box-sizing: border-box; font-family: var(--font-family); font-size: 0.95em; width: 100%; transition: border-color 0.2s ease; }
 #form-modal select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300e0ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 10px top 50%; background-size: 10px auto; padding-right: 30px; }
 #form-modal select option { background-color: #1a2a45; color: var(--text-color); }
 #form-modal input:focus, #form-modal select:focus, #form-modal textarea:focus { outline: none; border-bottom-color: var(--accent-color); box-shadow: none; }
 #form-modal input::placeholder, #form-modal textarea::placeholder { color: rgba(224, 224, 224, 0.4); opacity: 1; }
 #form-modal input::-ms-input-placeholder, #form-modal textarea::-ms-input-placeholder { color: rgba(224, 224, 224, 0.4); }
+/* Botón Submit */
 #actor-form button[type="submit"] { background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); padding: 10px 25px; border-radius: 2px; cursor: pointer; font-family: var(--font-family); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-top: 25px; transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; display: block; margin-left: auto; margin-right: auto; }
 #actor-form button[type="submit"]:hover { background-color: var(--hover-bg-color); color: var(--text-color-light); box-shadow: 0 0 8px var(--shadow-color); }
 #actor-form button[type="submit"]:disabled { border-color: #444; color: #555; cursor: not-allowed; background-color: transparent; opacity: 0.5; box-shadow: none; }
@@ -151,7 +190,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background-color: var(--accent-color); }
 
 
-/* ========== NUEVO: Responsive Design (Mobile) ========== */
+/* ========== Responsive Design (Mobile) ========== */
 @media (max-width: 768px) {
   body {
       overflow: auto; /* Permitir scroll en body en móvil si contenido excede */
@@ -181,7 +220,7 @@ body {
     padding: 15px; /* Menos padding en móvil */
   }
    #details-placeholder h3 { font-size: 1.1em; }
-   #details-placeholder p { font-size: 0.9em; }
+   #details-placeholder p { font-size: 0.9em; } /* Reducir un poco en móvil */
    .panel-links { font-size: 0.8em; }
 
   #copilot-box {
