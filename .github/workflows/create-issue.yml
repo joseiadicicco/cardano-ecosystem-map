@@ -11,12 +11,15 @@ jobs:
   create_issue_job:
     name: Create GitHub Issue Job
     runs-on: ubuntu-latest
+    # Permisos necesarios para escribir Issues
+    permissions:
+      issues: write
     steps:
-      # Paso 1: Hacer checkout del código (Importante aunque no usemos template ahora)
+      # Paso 1: Checkout del código
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Paso 2: Formatear título y cuerpo (Igual que antes)
+      # Paso 2: Formatear título y cuerpo
       - name: Format Issue Content
         id: format
         run: |
@@ -28,7 +31,12 @@ jobs:
           LAT="${{ github.event.client_payload.lat }}"
           LNG="${{ github.event.client_payload.lng }}"
           DESC="${{ github.event.client_payload.description }}"
-          ISSUE_TITLE="Propuesta Nuevo Actor: $NAME"
+
+          # ---------- TÍTULO CORREGIDO A INGLÉS ----------
+          ISSUE_TITLE="New Actor Proposal: $NAME"
+          # ---------------------------------------------
+
+          # Creamos el cuerpo (body) del Issue
           ISSUE_BODY=$(cat <<EOF
           **Nueva Propuesta de Actor Recibida desde el Formulario Web:**
 
@@ -45,25 +53,20 @@ jobs:
           *Por favor, revisar y verificar esta información antes de añadirla a \`data/cardano-actors.json\`.*
           EOF
           )
-          # Preparamos outputs escapando caracteres
+          # Preparamos outputs escapando solo % (quitamos reemplazo de \n y \r)
           ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
-          ISSUE_BODY="${ISSUE_BODY//$'\n'/'%0A'}"
-          ISSUE_BODY="${ISSUE_BODY//$'\r'/'%0D'}"
+          # ---------- LÍNEAS DE REEMPLAZO DE SALTOS ELIMINADAS ----------
           echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
           echo "issue_body=$ISSUE_BODY" >> $GITHUB_OUTPUT
         shell: bash
 
-      # ---------- PASO MODIFICADO/NUEVO ----------
       # Paso 3: Crear el Issue usando GitHub CLI (gh)
       - name: Create GitHub Issue using gh CLI
         env:
-          # ---------- CAMBIO AQUÍ ----------
-          # Usamos el PAT específico que guardamos como secret, en lugar del token por defecto
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }}
-          # ---------------------------------
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }} # Usando el PAT específico
           ISSUE_TITLE: ${{ steps.format.outputs.issue_title }}
           ISSUE_BODY: ${{ steps.format.outputs.issue_body }}
         run: |
-          # El comando gh usa GITHUB_TOKEN para autenticarse
+          # gh debería manejar los saltos de línea correctamente en $ISSUE_BODY
           gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
         shell: bash
