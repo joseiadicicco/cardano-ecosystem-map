@@ -18,18 +18,14 @@
 
     <div id="form-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>  <h2>Proponer Nuevo Actor</h2>
-            <form id="actor-form">
+            <span class="close-button">&times;</span>  <h2>Propose New Actor</h2> <form id="actor-form">
                 <div style="margin-bottom: 10px;">
-                    <label for="form-name">Nombre del Actor:</label><br>
-                    <input type="text" id="form-name" name="name" required style="width: 95%;">
+                    <label for="form-name">Actor Name:</label><br> <input type="text" id="form-name" name="name" required style="width: 95%;">
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-type">Tipo de Actor:</label><br>
-                    <select id="form-type" name="type" required>
-                        <option value="">Selecciona un tipo...</option>
-                        <option value="Ambassador">Ambassador</option>
+                    <label for="form-type">Actor Type:</label><br> <select id="form-type" name="type" required>
+                        <option value="">Select a type...</option> <option value="Ambassador">Ambassador</option>
                         <option value="Project">Project</option>
                         <option value="Hub">Hub</option>
                         <option value="University">University</option>
@@ -38,33 +34,26 @@
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-city">Ciudad:</label><br>
-                    <input type="text" id="form-city" name="city" required>
+                    <label for="form-city">City:</label><br> <input type="text" id="form-city" name="city" required>
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-country">País:</label><br>
-                    <input type="text" id="form-country" name="country" required>
+                    <label for="form-country">Country:</label><br> <input type="text" id="form-country" name="country" required>
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-lat">Latitud:</label><br>
-                    <input type="number" step="any" id="form-lat" name="lat" required placeholder="Ej: -34.6037">
+                    <label for="form-lat">Latitude:</label><br> <input type="number" step="any" id="form-lat" name="lat" required placeholder="E.g.: -34.6037">
                 </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-lng">Longitud:</label><br>
-                    <input type="number" step="any" id="form-lng" name="lng" required placeholder="Ej: -58.3816">
-                    <small>(Puedes obtenerlas de Google Maps)</small>
-                </div>
+                    <label for="form-lng">Longitude:</label><br> <input type="number" step="any" id="form-lng" name="lng" required placeholder="E.g.: -58.3816">
+                    <small>(You can get coordinates from Google Maps)</small> </div>
 
                 <div style="margin-bottom: 10px;">
-                    <label for="form-description">Descripción Breve:</label><br>
-                    <textarea id="form-description" name="description" rows="3" required style="width: 95%;"></textarea>
+                    <label for="form-description">Brief Description:</label><br> <textarea id="form-description" name="description" rows="3" required style="width: 95%;"></textarea>
                 </div>
 
-                <button type="submit">Enviar Propuesta</button>
-            </form>
+                <button type="submit">Submit Proposal</button> </form>
         </div>
     </div>
 
