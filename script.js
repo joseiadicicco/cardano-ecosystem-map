@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         myGlobe(globeContainer) // Asociamos al contenedor
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-day.jpg')
             .backgroundColor('rgba(0,0,0,0)');
+    
+    // --- NUEVO: Habilitar Auto-Rotación Lenta ---
+    myGlobe.controls().autoRotate = true;         // Activa la auto-rotación
+    myGlobe.controls().autoRotateSpeed = 0.25; // Ajusta la velocidad (prueba valores más bajos como 0.1 o más altos como 0.5)
+    console.log("Auto-rotación habilitada.");
+    // --- FIN Auto-Rotación Lenta ---
 
         console.log("Instancia de Globe.gl creada y configurada.");
 
