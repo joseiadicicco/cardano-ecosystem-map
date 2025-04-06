@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // --- Lógica para el Modal del Formulario (Abrir/Cerrar) ---
     const settingsIcon = document.getElementById('settings-icon');
     const formModal = document.getElementById('form-modal');
-    const closeButton = formModal ? formModal.querySelector('.close-button') : null; // Más seguro buscar dentro del modal
+    const closeButton = formModal ? formModal.querySelector('.close-button') : null;
 
     function openModal() {
         if (formModal) {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
-    // Esta función closeModal necesita estar definida ANTES de ser usada en el listener del submit
+    // Esta función closeModal necesita estar definida ANTES de ser usada/referenciada
     function closeModal() {
         if (formModal) {
             formModal.classList.remove('modal-visible');
@@ -85,16 +85,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     if (actorForm && submitButton) {
         // Marcamos la función del listener como 'async' para poder usar 'await' dentro
         actorForm.addEventListener('submit', async function(event) {
-            // 1. Prevenir el comportamiento por defecto del formulario
             event.preventDefault();
             console.log("Formulario enviado, previniendo recarga...");
 
-            // Deshabilitar botón para evitar envíos múltiples y dar feedback visual
             submitButton.disabled = true;
-            submitButton.textContent = 'Enviando...'; // Cambiar texto (opcional)
+            submitButton.textContent = 'Sending...'; // Cambiado a inglés
 
-            try { // Usamos try...catch para manejar errores en el proceso async
-                // 2. Capturar los valores de cada campo
+            try {
                 const actorName = document.getElementById('form-name').value;
                 const actorType = document.getElementById('form-type').value;
                 const actorCity = document.getElementById('form-city').value;
@@ -103,7 +100,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const actorLng = document.getElementById('form-lng').value;
                 const actorDescription = document.getElementById('form-description').value;
 
-                // 3. Crear el objeto con los datos (payload)
                 const formData = {
                     name: actorName,
                     type: actorType,
@@ -115,10 +111,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 };
                 console.log("Datos a enviar:", formData);
 
-                // 4. Definir la URL de nuestra API serverless (ruta relativa)
                 const apiUrl = '/api/submit-proposal';
 
-                // 5. Enviar los datos usando fetch a nuestra función serverless
                 console.log(`Enviando datos a ${apiUrl}...`);
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -128,37 +122,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     body: JSON.stringify(formData),
                 });
 
-                // 6. Procesar la respuesta que nos devuelve la función serverless
                 const result = await response.json();
 
-                if (response.ok) { // Si el status code fue exitoso (2xx)
+                if (response.ok) {
                     console.log("Respuesta exitosa del servidor:", result);
-                    alert(`Éxito: ${result.message || 'Propuesta enviada correctamente.'}`);
-                    actorForm.reset(); // Limpiar formulario
-                    // closeModal(); // Llamamos a la función definida antes para cerrar el modal
+                    // ----- ALERTA DE ÉXITO EN INGLÉS -----
+                    alert(`Success: ${result.message || 'Proposal submitted successfully.'}`);
+                    // ------------------------------------
+                    actorForm.reset();
+                    // closeModal(); // Decide si cerrar solo en éxito o en finally
                 } else {
                     console.error("Error en la respuesta del servidor:", result);
-                    alert(`Error: ${result.message || 'No se pudo enviar la propuesta.'}`);
+                    // ----- ALERTA DE ERROR EN INGLÉS -----
+                    alert(`Error: ${result.message || 'Could not submit proposal.'}`);
+                    // -----------------------------------
                 }
 
             } catch (error) {
-                // 7. Manejar errores si la llamada fetch falla (ej. problema de red)
                 console.error("Error al enviar el formulario (fetch catch):", error);
-                alert("Error de red al intentar enviar la propuesta. Por favor, intenta de nuevo.");
+                // ----- ALERTA DE ERROR DE RED EN INGLÉS -----
+                alert("Network error trying to submit proposal. Please try again.");
+                // -------------------------------------------
             } finally {
-                // 8. Este bloque se ejecuta siempre (éxito o error)
-                // Rehabilitar el botón de envío
+                // Rehabilitar botón y restaurar texto en inglés
                 submitButton.disabled = false;
-                submitButton.textContent = 'Enviar Propuesta'; // Restaurar texto original
-                // También cerramos el modal aquí para que se cierre incluso si hubo error
-                // (o puedes decidir cerrarlo solo en caso de éxito, moviendo closeModal() dentro del if(response.ok))
+                submitButton.textContent = 'Submit Proposal'; // Aseguramos que vuelva a inglés
+                // Cerrar modal (se cierra siempre, éxito o error)
                 if (typeof closeModal === 'function') {
                      closeModal();
                 }
             }
         });
     } else {
-        // Mensajes de error si no se encuentran los elementos necesarios
         if (!actorForm) console.error("Error: No se encontró el formulario con id 'actor-form'.");
         if (!submitButton) console.error("Error: No se encontró el botón de envío dentro del formulario.");
     }
@@ -166,5 +161,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 }); // <<< Cierre del addEventListener para DOMContentLoaded
 
-// Este console.log va FUERA del listener DOMContentLoaded, se ejecuta cuando el script se carga inicialmente
+// Este console.log va FUERA del listener DOMContentLoaded
 console.log("script.js cargado.");
