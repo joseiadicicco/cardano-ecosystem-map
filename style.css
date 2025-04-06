@@ -151,3 +151,66 @@
     margin: 15px 0;
 }
 /* --- Fin Estilos Panel Lateral --- */
+
+
+/* --- Estilos para el Panel de Configuración (Popup) --- */
+
+.settings-popup {
+    position: fixed; /* Fijo en la pantalla */
+    bottom: 75px; /* Posición vertical (ajusta según veas encima del icono) */
+    right: 20px;  /* Alineado con el icono a la derecha */
+    width: 200px; /* Ancho del popup */
+    background-color: rgba(245, 245, 245, 0.97); /* Fondo ligeramente translúcido */
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 1010; /* Asegura que esté sobre otros elementos */
+    box-sizing: border-box;
+
+    /* Oculto por defecto con transición de opacidad */
+    opacity: 0;
+    visibility: hidden; /* Mejor para accesibilidad que display:none con transition */
+    pointer-events: none; /* No se puede interactuar si está oculto */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Clase para mostrar el popup (se añadirá/quitará con JS) */
+.settings-popup.settings-popup-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Se puede interactuar cuando es visible */
+}
+
+/* Estilo para los botones dentro del popup */
+.settings-popup button {
+    display: block; /* Un botón por línea */
+    width: 100%;    /* Ocupa todo el ancho */
+    background: none; /* Sin fondo por defecto */
+    border: none;     /* Sin borde */
+    padding: 10px 12px; /* Espaciado interno */
+    margin: 0 0 5px 0; /* Margen inferior (excepto el último) */
+    text-align: left; /* Alineación del texto */
+    cursor: pointer;
+    color: #333;
+    font-size: 0.95em;
+    border-radius: 4px;
+    transition: background-color 0.2s ease; /* Transición suave al pasar el cursor */
+}
+
+.settings-popup button:last-child {
+    margin-bottom: 0; /* Quitar margen inferior al último botón */
+}
+
+.settings-popup button:hover {
+    background-color: rgba(0, 0, 0, 0.08); /* Fondo sutil al pasar el cursor */
+}
+
+/* Estilo para los iconos dentro de los botones */
+.settings-popup button i.fas { /* Selecciona los iconos Font Awesome dentro de los botones */
+    margin-right: 10px; /* Espacio entre icono y texto */
+    width: 16px;        /* Ancho fijo para alinear iconos */
+    text-align: center;
+    color: #555; /* Color ligeramente más oscuro para el icono */
+}
+
+/* --- Fin Estilos Panel Configuración --- */

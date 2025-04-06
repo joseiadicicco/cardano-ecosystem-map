@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa del Ecosistema Cardano</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        body { margin: 0; overflow: hidden; } /* Añadido overflow: hidden para evitar barras de scroll innecesarias */
+        body { margin: 0; overflow: hidden; }
         #globeViz { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 0;}
     </style>
 </head>
@@ -14,7 +15,9 @@
 
     <div id="globeViz"></div>
 
-    <div id="settings-icon">⚙️</div>
+    <div id="settings-icon" title="Settings">
+        <i class="fas fa-cog"></i>
+    </div>
 
     <div id="form-modal" class="modal">
         <div class="modal-content">
@@ -25,7 +28,6 @@
                     <label for="form-name">Actor Name:</label><br>
                     <input type="text" id="form-name" name="name" required style="width: 95%;">
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-type">Actor Type:</label><br>
                     <select id="form-type" name="type" required>
@@ -35,41 +37,35 @@
                         <option value="Hub">Hub</option>
                         <option value="University">University</option>
                         <option value="Founder">Founder</option>
-                        <option value="SPO">SPO</option> </select>
+                        <option value="SPO">SPO</option>
+                    </select>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-city">City:</label><br>
                     <input type="text" id="form-city" name="city" required>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-country">Country:</label><br>
                     <input type="text" id="form-country" name="country" required>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-lat">Latitude:</label><br>
                     <input type="number" step="any" id="form-lat" name="lat" required placeholder="E.g.: -34.6037">
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-lng">Longitude:</label><br>
                     <input type="number" step="any" id="form-lng" name="lng" required placeholder="E.g.: -58.3816">
                     <small>(You can get coordinates from Google Maps)</small>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-description">Brief Description:</label><br>
                     <textarea id="form-description" name="description" rows="3" required style="width: 95%;"></textarea>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-twitter">Twitter Handle (Optional):</label><br>
                     <input type="text" id="form-twitter" name="twitter" style="width: 95%;" placeholder="e.g., Cardano_CF (without @)">
                     <small>(Username only, without the '@')</small>
                 </div>
-
                 <div style="margin-bottom: 10px;">
                     <label for="form-website">Website (Optional):</label><br>
                     <input type="url" id="form-website" name="website" style="width: 95%;" placeholder="e.g., https://cardano.org">
@@ -78,10 +74,8 @@
                 <button type="submit">Submit Proposal</button>
             </form>
         </div>
-    </div>
-    <div id="details-panel" class="panel">
+    </div> <div id="details-panel" class="panel">
         <span class="close-panel-button">&times;</span>
-
         <h3 id="panel-name"></h3>
         <p>
             <strong>Type:</strong> <span id="panel-type"></span>
@@ -90,21 +84,25 @@
             <span id="panel-city"></span>,
             <span id="panel-country"></span>
         </p>
-        <hr> <p id="panel-description"></p> <div class="panel-links" style="margin-top: 15px; font-size: 0.9em;">
+        <hr>
+        <p id="panel-description"></p>
+        <div class="panel-links" style="margin-top: 15px; font-size: 0.9em;">
             <p id="panel-twitter-container" style="display: none; margin-bottom: 5px;">
                 <strong>Twitter:</strong>
-                <a id="panel-twitter-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;">
-                    </a>
+                <a id="panel-twitter-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;"></a>
             </p>
             <p id="panel-website-container" style="display: none; margin-bottom: 5px;">
                  <strong>Website:</strong>
-                 <a id="panel-website-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;">
-                    </a>
+                 <a id="panel-website-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;"></a>
             </p>
         </div>
-
-
-        </div>
+    </div> <div id="settings-panel" class="settings-popup">
+        <button id="open-submit-form-btn" title="Propose a new actor to be added to the map">
+            <i class="fas fa-plus-circle"></i> Propose Actor
+        </button>
+        <button id="toggle-rotation-btn" title="Start/Stop globe auto-rotation">
+            <i class="fas fa-sync-alt"></i> Stop Rotation </button>
+    </div>
     <script src="//unpkg.com/three"></script>
     <script src="//unpkg.com/globe.gl"></script>
     <script src="script.js"></script>
