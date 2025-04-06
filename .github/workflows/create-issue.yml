@@ -1,29 +1,23 @@
-# Nombre descriptivo del workflow
 name: Create Issue from Web Form
 
-# Trigger
 on:
   repository_dispatch:
     types: [new-actor-proposal]
 
-# Trabajos
 jobs:
   create_issue_job:
     name: Create GitHub Issue Job
     runs-on: ubuntu-latest
-    # Permisos necesarios para escribir Issues
     permissions:
       issues: write
     steps:
-      # Paso 1: Checkout del código
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Paso 2: Formatear título y cuerpo
       - name: Format Issue Content
         id: format
         run: |
-          # Script bash para extraer datos y formatear
+          # Script bash (extracción de variables NAME, TYPE, etc. igual que antes)
           NAME="${{ github.event.client_payload.name }}"
           TYPE="${{ github.event.client_payload.type }}"
           CITY="${{ github.event.client_payload.city }}"
@@ -31,12 +25,7 @@ jobs:
           LAT="${{ github.event.client_payload.lat }}"
           LNG="${{ github.event.client_payload.lng }}"
           DESC="${{ github.event.client_payload.description }}"
-
-          # ---------- TÍTULO CORREGIDO A INGLÉS ----------
           ISSUE_TITLE="New Actor Proposal: $NAME"
-          # ---------------------------------------------
-
-          # Creamos el cuerpo (body) del Issue
           ISSUE_BODY=$(cat <<EOF
           **Nueva Propuesta de Actor Recibida desde el Formulario Web:**
 
@@ -53,20 +42,24 @@ jobs:
           *Por favor, revisar y verificar esta información antes de añadirla a \`data/cardano-actors.json\`.*
           EOF
           )
-          # Preparamos outputs escapando solo % (quitamos reemplazo de \n y \r)
+          # Escapar '%' por si acaso
           ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
-          # ---------- LÍNEAS DE REEMPLAZO DE SALTOS ELIMINADAS ----------
+
+          # Guardar título (línea única)
           echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
-          echo "issue_body=$ISSUE_BODY" >> $GITHUB_OUTPUT
+
+          # ---- CORRECCIÓN: Usar formato de delimitador para output multilinea ----
+          echo "issue_body<<EOF" >> $GITHUB_OUTPUT
+          echo "$ISSUE_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          # -------------------------------------------------------------------
         shell: bash
 
-      # Paso 3: Crear el Issue usando GitHub CLI (gh)
       - name: Create GitHub Issue using gh CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }} # Usando el PAT específico
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }}
           ISSUE_TITLE: ${{ steps.format.outputs.issue_title }}
           ISSUE_BODY: ${{ steps.format.outputs.issue_body }}
         run: |
-          # gh debería manejar los saltos de línea correctamente en $ISSUE_BODY
           gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
         shell: bash
