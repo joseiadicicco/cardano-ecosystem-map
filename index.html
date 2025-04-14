@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardano Ecosystem Map</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAAQECAAEAAQA4AAAAFgAAACgAAAABAAAAAgAAAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAD/"/>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app-container">
+
+        <div id="globe-area">
+            <div id="globeViz"></div>
+            <div class="scanner-line"></div>
+        </div>
+
+        <div id="main-sidebar">
+            <div id="sidebar-content">
+                 <div id="details-placeholder">
+                    <!-- Contenedor de imagen simplificado -->
+                    <div id="actor-image-container" class="actor-image-container">
+                        <img id="actor-image" class="actor-image" alt="">
+                        <div class="no-image-placeholder">
+                            <i class="fas fa-user-circle" style="font-size: 2em; margin-bottom: 10px;"></i>
+                            <span id="actor-type-placeholder"></span>
+                        </div>
+                    </div>
+                    <!-- Resto del contenido -->
+                    <h3 id="panel-name">Select a point</h3>
+                    <p>
+                        <strong>Type:</strong> <span id="panel-type"></span>
+                    </p>
+                    <p>
+                        <span id="panel-city"></span>,
+                        <span id="panel-country"></span>
+                    </p>
+                    <hr>
+                    <p id="panel-description">Click on a point on the globe to see details.</p>
+                    <div class="panel-links" style="margin-top: 15px; font-size: 0.9em;">
+                        <p id="panel-twitter-container" style="display: none; margin-bottom: 5px;">
+                            <strong>Twitter:</strong>
+                            <a id="panel-twitter-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;"></a>
+                        </p>
+                        <p id="panel-website-container" style="display: none; margin-bottom: 5px;">
+                             <strong>Website:</strong>
+                             <a id="panel-website-link" href="#" target="_blank" rel="noopener noreferrer" style="word-break: break-all;"></a>
+                        </p>
+                    </div>
+                 </div>
+            </div>
+
+            <div id="copilot-box">
+                <span>[Copilot Area]</span>
+            </div>
+        </div> </div> <div id="settings-icon" title="Settings"><i class="fas fa-cog"></i></div>
+
+    <!-- Settings Panel with new organized structure -->
+    <div id="settings-panel">
+        <span class="close-settings-button" title="Close Settings">&times;</span>
+        
+        <div class="settings-section">
+            <h4>Globe Controls</h4>
+            <button id="toggle-rotation-btn" title="Start/Stop globe rotation">
+                <i class="fas fa-pause"></i> Stop Rotation
+            </button>
+            <button id="toggle-graticules-btn" title="Show/Hide globe graticules (lines)">
+                <i class="fas fa-border-all"></i> Show Graticules
+            </button>
+        </div>
+
+        <div class="settings-section">
+            <h4>Filters</h4>
+            <div class="checkbox-group">
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-founder" name="actorFilter" value="Founder" checked>
+                    <label for="filter-founder">Founders</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-hub" name="actorFilter" value="Hub" checked>
+                    <label for="filter-hub">Hubs</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-university" name="actorFilter" value="University" checked>
+                    <label for="filter-university">Universities</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-project" name="actorFilter" value="Project" checked>
+                    <label for="filter-project">Projects</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-ambassador" name="actorFilter" value="Ambassador" checked>
+                    <label for="filter-ambassador">Ambassadors</label>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="filter-spo" name="actorFilter" value="SPO" checked>
+                    <label for="filter-spo">SPOs</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>Connections</h4>
+            <div class="settings-group">
+                <label class="settings-label">Network Visualization</label>
+                <div class="select-group">
+                    <select id="connection-type" name="connectionType">
+                        <option value="none" selected>No Connections</option>
+                        <option value="type">Connect by Type</option>
+                        <option value="region">Connect by Region</option>
+                    </select>
+                </div>
+                <div class="connection-options" style="display: none;">
+                    <div class="color-option">
+                        <label for="connection-color">Arc Color:</label>
+                        <input type="color" id="connection-color" value="#00e5ff">
+                    </div>
+                    <div class="range-option">
+                        <label for="connection-width">Arc Width:</label>
+                        <input type="range" id="connection-width" min="0.1" max="2" step="0.1" value="0.5">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>Globe Appearance</h4>
+            <div class="settings-group">
+                <label class="settings-label">Map Style</label>
+                <div class="radio-options">
+                    <div class="radio-option">
+                        <input type="radio" id="view-day" name="globeMode" value="day">
+                        <label for="view-day">Day</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="view-night" name="globeMode" value="night">
+                        <label for="view-night">Night</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="view-blue" name="globeMode" value="blue" checked>
+                        <label for="view-blue">Blue</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h4>Ecosystem Management</h4>
+            <button id="open-submit-form-btn" title="Propose a new actor">
+                <i class="fas fa-plus-circle"></i> Propose New Actor
+            </button>
+        </div>
+
+        <div class="settings-section">
+            <h4>About</h4>
+            <div class="about-content">
+                <p>Cardano Ecosystem Map is an interactive visualization of the global Cardano community.</p>
+                <div class="version-info">
+                    <small>Version: 1.0.0</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="form-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Propose New Actor</h2>
+            <form id="actor-form">
+                 <div style="margin-bottom: 10px;"> <label for="form-name">Actor Name:</label><br> <input type="text" id="form-name" name="name" required> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-type">Actor Type:</label><br> <select id="form-type" name="type" required> <option value="">Select a type...</option> <option value="Ambassador">Ambassador</option> <option value="Project">Project</option> <option value="Hub">Hub</option> <option value="University">University</option> <option value="Founder">Founder</option> <option value="SPO">SPO</option> </select> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-city">City:</label><br> <input type="text" id="form-city" name="city" required> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-country">Country:</label><br> <input type="text" id="form-country" name="country" required> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-lat">Latitude:</label><br> <input type="number" step="any" id="form-lat" name="lat" required placeholder="E.g.: -34.6037"> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-lng">Longitude:</label><br> <input type="number" step="any" id="form-lng" name="lng" required placeholder="E.g.: -58.3816"> <small>(You can get coordinates from Google Maps)</small> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-description">Brief Description:</label><br> <textarea id="form-description" name="description" rows="3" required></textarea> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-twitter">Twitter Handle (Optional):</label><br> <input type="text" id="form-twitter" name="twitter" placeholder="e.g., Cardano_CF (without @)"> <small>(Username only, without the '@')</small> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-website">Website (Optional):</label><br> <input type="url" id="form-website" name="website" placeholder="e.g., https://cardano.org"> <small>(Full URL including https://)</small> </div>
+                 <div style="margin-bottom: 10px;"> <label for="form-image">Image URL (Optional):</label><br> <input type="url" id="form-image" name="imageUrl" placeholder="e.g., https://example.com/image.jpg"> <small>(Direct link to image, recommended size: 800x600px)</small> </div>
+                 <button type="submit">Submit Proposal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load libraries directly -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <script src="https://unpkg.com/globe.gl@2.32.2/dist/globe.gl.min.js"></script>
+    <!-- Load main script -->
+    <script src="script.js"></script>
+
+</body>
+</html>

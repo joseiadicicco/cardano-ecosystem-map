@@ -1,0 +1,937 @@
+/* === style.css === FINAL CONSOLIDADO === */
+
+/* --- 1. Base Theme & Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Orbitron:wght@400;500;700&display=swap');
+
+:root {
+  /* Core Colors */
+  --bg-color: #040b14; /* Darker background for more contrast */
+  --text-color: #e0e6ff; /* Slightly blue-tinted white */
+  --text-color-light: #ffffff;
+  --accent-color: #00e5ff; /* Brighter cyan for Oblivion-style */
+  
+  /* UI Elements */
+  --panel-bg-color: rgba(8, 19, 32, 0.85); /* Darker, more transparent panels */
+  --panel-bg-gradient: linear-gradient(135deg, rgba(8, 19, 32, 0.95) 0%, rgba(8, 19, 32, 0.85) 100%);
+  --input-bg-color: rgba(4, 11, 20, 0.9);
+  
+  /* Borders and Glows */
+  --border-color: rgba(0, 229, 255, 0.3);
+  --border-color-focus: rgba(0, 229, 255, 0.8);
+  --hover-bg-color: rgba(0, 229, 255, 0.1);
+  --shadow-color: rgba(0, 229, 255, 0.2);
+  --glow-color: rgba(0, 229, 255, 0.15);
+  --divider-glow-color: rgba(0, 229, 255, 0.5);
+  
+  /* Additional UI Effects */
+  --hologram-gradient: linear-gradient(180deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.05) 100%);
+  --scanner-line: rgba(0, 229, 255, 0.5);
+  
+  /* Typography */
+  --font-family-display: 'Orbitron', sans-serif; /* Futuristic display font */
+  --font-family: 'Roboto Mono', monospace;
+  --sidebar-width: 350px;
+}
+
+/* Estilos globales del body */
+body {
+  background-color: var(--bg-color);
+  /* Aumentar opacidad del grid */
+  background-image: 
+      linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-weight: 300;
+  margin: 0;
+  overflow: hidden; /* Evita barras de scroll en el body en desktop */
+  height: 100vh;
+}
+
+/* --- 2. App Layout (Flexbox) --- */
+#app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+#app-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, rgba(0, 229, 255, 0.1) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+#globe-area {
+  flex-grow: 1; /* Ocupa el espacio restante */
+  height: 100%;
+  position: relative;
+  background-color: var(--bg-color); /* Fondo mientras carga el globo */
+  overflow: hidden; /* Evita que el canvas se desborde visualmente */
+}
+#globe-area::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--border-color);
+  border-right: none;
+  pointer-events: none;
+  box-shadow: inset 0 0 50px var(--glow-color);
+}
+
+#globeViz {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Globe graticules enhancement */
+#globeViz canvas {
+  opacity: 1;
+}
+.graticule {
+  stroke: rgba(255, 255, 255, 0.85) !important;
+  stroke-width: 1.2 !important;
+}
+
+/* --- 3. Main Sidebar --- */
+#main-sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--panel-bg-gradient);
+  backdrop-filter: blur(10px);
+  border-left: 1px solid var(--border-color);
+  box-shadow: -5px 0 30px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  z-index: 10; /* Encima del globo */
+  color: var(--text-color);
+  transition: width 0.3s ease; /* Añadir transición para cambios futuros */
+}
+
+/* Sección superior del sidebar */
+#sidebar-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px 25px;
+  box-sizing: border-box;
+}
+
+#sidebar-content::-webkit-scrollbar { 
+  width: 6px; 
+}
+
+#sidebar-content::-webkit-scrollbar-track { 
+  background: rgba(0,0,0,0.1); 
+  border-radius: 3px; 
+}
+
+#sidebar-content::-webkit-scrollbar-thumb { 
+  background-color: rgba(0, 229, 255, 0.3);
+  border-radius: 3px; 
+}
+
+#sidebar-content::-webkit-scrollbar-thumb:hover { 
+  background-color: rgba(0, 229, 255, 0.8);
+}
+
+/* Contenido de detalles */
+#details-placeholder h3 {
+  color: var(--text-color-light); font-weight: 400;
+  border-bottom: 1px solid var(--border-color); padding-bottom: 10px;
+  margin-top: 5px; margin-bottom: 15px; font-size: 1.2em;
+  font-family: var(--font-family-display);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+}
+#details-placeholder h3::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-color) 0%, transparent 100%);
+}
+#details-placeholder p {
+  margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; /* Tamaño ajustado */
+}
+#details-placeholder hr { /* Divisor con glow */
+  border: none; height: 1px;
+  background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent);
+  box-shadow: 0 0 4px var(--shadow-color);
+  margin: 20px 5px;
+}
+#details-placeholder strong { font-weight: 400; color: var(--accent-color); margin-right: 5px; }
+.panel-links { margin-top: 15px; font-size: 0.9em; }
+.panel-links a { word-break: break-all; color: var(--accent-color); text-decoration: none;}
+.panel-links a:hover { text-decoration: underline; }
+.panel-links p { margin-bottom: 8px; }
+
+/* Sección inferior (Caja Copiloto) */
+#copilot-box {
+  height: 197px; /* Altura 16:9 */
+  flex-shrink: 0; border-top: none; position: relative; display: flex;
+  align-items: center; justify-content: center; padding: 10px; box-sizing: border-box;
+  color: #666; font-size: 0.9em; background-color: rgba(0,0,0,0.2);
+}
+#copilot-box::before { /* Divisor superior con glow */
+  content: ''; position: absolute; top: 0; left: 5%; right: 5%; height: 1px;
+  background: linear-gradient(to right, transparent, var(--divider-glow-color), transparent);
+  box-shadow: 0 0 4px var(--shadow-color);
+}
+#copilot-box span { font-style: italic; }
+
+
+/* --- 4. Overlays (Settings Icon, Settings Panel, Form Modal) --- */
+
+/* Settings Icon */
+#settings-icon {
+  position: fixed;
+  /* Keep position relative to viewport, not sidebar */
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1003; /* Above settings panel */
+  background: var(--panel-bg-gradient);
+  color: var(--accent-color);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  padding: 8px 10px;
+  line-height: 1;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  /* Remove transition for 'right' as it's fixed now */
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: all;
+}
+#settings-icon:hover { background-color: rgba(30, 45, 65, 0.9); box-shadow: 0 0 25px var(--glow-color); }
+
+/* Settings Panel (Overlay) - Changed from .settings-popup */
+#settings-panel {
+  position: fixed;
+  /* Center over the globe area */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering trick */
+  width: 60vw; /* Much wider, relative to viewport width */
+  max-width: 700px; /* Max width */
+  /* height: auto; /* Adjust height based on content */
+  max-height: 75vh; /* Taller, relative to viewport height */
+  overflow-y: auto; /* Add scroll if content exceeds height */
+  background: var(--panel-bg-gradient);
+  backdrop-filter: blur(15px);
+  border-radius: 6px; /* Slightly larger radius */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 30px var(--shadow-color), inset 0 0 1px var(--accent-color); /* Stronger shadow */
+  padding: 25px 35px; /* More padding */
+  z-index: 1002; /* Ensure it's above other elements */
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: all; /* Enable interactions even when hidden */
+  /* Keep transitions */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  display: flex; /* Use flexbox for internal layout */
+  flex-direction: column; /* Stack sections vertically */
+  min-width: 380px;
+  height: auto;
+}
+#settings-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+      transparent 0%, 
+      var(--accent-color) 50%, 
+      transparent 100%
+  );
+}
+#settings-panel.settings-panel-visible { /* Changed class name */
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+/* Close button for Settings Panel */
+.close-settings-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 1px 0 #000;
+    cursor: pointer;
+    z-index: 1001;
+}
+.close-settings-button:hover,
+.close-settings-button:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Buttons inside Settings Panel */
+#settings-panel button { /* Target buttons inside the panel */
+  display: block;
+  width: 100%;
+  background: var(--panel-bg-gradient);
+  border: 1px solid var(--border-color);
+  padding: 10px 12px;
+  margin: 0 0 8px 0; /* Slightly adjust margin */
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 0.9em;
+  border-radius: 3px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+#settings-panel button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-color);
+  transition: left 0.3s ease;
+}
+#settings-panel button:hover::before {
+  left: 0;
+}
+#settings-panel button:last-child { margin-bottom: 0; }
+#settings-panel button:hover {
+  background-color: var(--hover-bg-color);
+  border-color: rgba(0, 229, 255, 0.3);
+  color: var(--text-color-light);
+}
+#settings-panel button i.fas {
+  margin-right: 10px;
+  width: 16px;
+  text-align: center;
+  color: var(--accent-color);
+}
+#settings-panel button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: var(--hover-bg-color);
+  transition: width 0.3s ease;
+  z-index: 0;
+}
+#settings-panel button:hover::after {
+  width: 100%;
+}
+#settings-panel button i,
+#settings-panel button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Settings Group (Fieldset or Div) inside Settings Panel */
+#settings-panel .settings-section {
+  margin-bottom: 25px; /* Space between sections */
+  padding-bottom: 20px; /* Space below content */
+  border-bottom: 1px solid var(--border-color); /* Separator line */
+}
+#settings-panel .settings-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none; /* No line for the last section */
+}
+#settings-panel .settings-section h4 {
+  color: var(--accent-color);
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  border-bottom: 1px solid rgba(0, 224, 255, 0.2); /* Subtle underline for section title */
+  padding-bottom: 8px;
+}
+.settings-section {
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--border-color);
+}
+.settings-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.settings-section h4 {
+  color: var(--accent-color);
+  font-family: var(--font-family-display);
+  font-size: 1.1em;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 0 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+  text-transform: uppercase;
+}
+
+/* Style for the existing fieldset group (can be inside a section) */
+#settings-panel .settings-group {
+  margin-top: 0; /* Reset margin if inside a section */
+  padding-top: 0; /* Reset padding */
+  border-top: none; /* Remove top border if inside a section */
+}
+#settings-panel .settings-group legend {
+  /* Keep existing styles or adjust if needed */
+  color: var(--accent-color);
+  font-size: 0.9em;
+  font-weight: 400;
+  padding: 0 8px;
+  margin-bottom: 10px;
+}
+/* ... rest of settings-group styles ... */
+
+/* Radio Options Styling */
+.settings-label {
+  display: block;
+  color: var(--text-color);
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+.radio-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.radio-option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+.radio-option input[type="radio"]:checked {
+  border-color: var(--accent-color);
+  background: transparent;
+}
+.radio-option input[type="radio"]:checked::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.radio-option label {
+  color: var(--text-color);
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+/* About Section Styling */
+.about-content {
+  color: var(--text-color);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+.version-info {
+  margin-top: 15px;
+  color: var(--accent-color);
+  opacity: 0.7;
+}
+
+/* Form Modal */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.8); animation-name: fadeIn; animation-duration: 0.4s; }
+.modal-content { background-color: var(--panel-bg-color); color: var(--text-color); border: none; box-shadow: 0 0 25px var(--shadow-color), inset 0 0 1px var(--accent-color); border-radius: 4px; margin: 8% auto; padding: 25px 35px; width: 85%; max-width: 650px; position: relative; animation-name: slideIn; animation-duration: 0.4s; }
+.modal-content h2 {
+  color: var(--text-color-light); font-weight: 400; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-top: 0px; margin-bottom: 25px; font-size: 1.4em; text-align: center;
+  font-family: var(--font-family-display);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+}
+.modal-content h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-color) 0%, transparent 100%);
+}
+/* Botón de cierre (X) del modal */
+.close-button { color: #aaa; position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; line-height: 1; text-shadow: 0 1px 0 #000; cursor: pointer; }
+.close-button:hover, .close-button:focus { color: #fff; text-decoration: none; }
+/* Clase para mostrar el modal */
+.modal.modal-visible { display: block; }
+
+/* Estilos para elementos DENTRO del Formulario */
+.modal-content label { font-weight: 400; font-size: 0.9em; color: var(--accent-color); display: block; margin-bottom: 3px; }
+.modal-content small { font-size: 0.8em; color: #aaa; display: block; margin-top: 4px; }
+/* Inputs, Select, Textarea */
+#form-modal input[type="text"], #form-modal input[type="number"], #form-modal input[type="url"], #form-modal select, #form-modal textarea { background: var(--input-bg-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 2px; border-radius: 0; margin-top: 0px; box-sizing: border-box; font-family: var(--font-family); font-size: 0.95em; width: 100%; transition: border-color 0.2s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
+#form-modal select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300e0ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 10px top 50%; background-size: 10px auto; padding-right: 30px; }
+#form-modal select option { background-color: #1a2a45; color: var(--text-color); }
+#form-modal input:focus, #form-modal select:focus, #form-modal textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 10px var(--glow-color); }
+
+#form-modal input[type="text"]::placeholder,
+#form-modal input[type="number"]::placeholder,
+#form-modal input[type="url"]::placeholder,
+#form-modal textarea::placeholder {
+    color: rgba(224, 224, 224, 0.4);
+    opacity: 1;
+}
+
+#form-modal input[type="text"]::-webkit-input-placeholder,
+#form-modal input[type="number"]::-webkit-input-placeholder,
+#form-modal input[type="url"]::-webkit-input-placeholder,
+#form-modal textarea::-webkit-input-placeholder {
+    color: rgba(224, 224, 224, 0.4);
+}
+
+#form-modal input[type="text"]::-moz-placeholder,
+#form-modal input[type="number"]::-moz-placeholder,
+#form-modal input[type="url"]::-moz-placeholder,
+#form-modal textarea::-moz-placeholder {
+    color: rgba(224, 224, 224, 0.4);
+}
+
+/* Botón Submit */
+#actor-form button[type="submit"] { background-color: transparent; color: var(--accent-color); border: 1px solid var(--accent-color); padding: 10px 25px; border-radius: 2px; cursor: pointer; font-family: var(--font-family); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-top: 25px; transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; display: block; margin-left: auto; margin-right: auto; }
+#actor-form button[type="submit"]:hover { background-color: var(--hover-bg-color); color: var(--text-color-light); box-shadow: 0 0 8px var(--shadow-color); }
+#actor-form button[type="submit"]:disabled { border-color: #444444; color: #555555; cursor: not-allowed; background-color: transparent; opacity: 0.5; box-shadow: none; }
+
+/* Corregir otros selectores inválidos */
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    padding: 10px 2px;
+    border-radius: 0;
+    margin-top: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    font-size: 0.95em;
+    width: 100%;
+    transition: border-color 0.2s ease;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* --- 6. Details Content (Inside Sidebar) --- */
+/* (Estilos ya definidos) */
+
+
+/* --- 7. Animaciones --- */
+@keyframes fadeIn { from {opacity: 0} to {opacity: 1} }
+@keyframes slideIn { from {margin-top: -50px; opacity: 0} to {margin-top: 8%; opacity: 1} }
+
+/* Estilo Scrollbar (Webkit) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--input-bg-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 3px; border: 1px solid var(--border-color); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--accent-color); }
+
+/* Animation Keyframes */
+@keyframes scanline {
+  0% {
+      transform: translateY(-100%);
+  }
+  100% {
+      transform: translateY(100%);
+  }
+}
+
+/* Scanner effect for the globe area */
+.scanner-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--scanner-line);
+  opacity: 0.5;
+  animation: scanline 3s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Points label enhancement */
+.point-label {
+  background: var(--panel-bg-gradient) !important;
+  backdrop-filter: blur(5px) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+  font-family: var(--font-family) !important;
+  box-shadow: 0 0 15px var(--shadow-color) !important;
+}
+
+/* Prevent text selection on UI elements */
+#settings-icon,
+#settings-panel,
+.settings-section,
+#settings-panel button,
+.close-settings-button,
+.radio-option,
+.radio-option label,
+#globe-area,
+.scanner-line,
+#main-sidebar,
+#copilot-box {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/* Allow text selection only where needed */
+#panel-description,
+.about-content p,
+#form-modal input,
+#form-modal textarea {
+    user-select: text;
+    cursor: text;
+}
+
+/* Links should show pointer cursor */
+.panel-links a,
+#settings-panel button,
+.close-settings-button {
+    cursor: pointer;
+}
+
+/* Checkbox Group Styling */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-option input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    background: var(--input-bg-color);
+}
+
+.checkbox-option input[type="checkbox"]:checked {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.checkbox-option input[type="checkbox"]:checked::before {
+    content: '\2714';
+    position: absolute;
+    color: var(--bg-color);
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-option label {
+    color: var(--text-color);
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+/* Connection Controls Styling */
+.select-group {
+    margin-bottom: 15px;
+}
+
+.select-group select {
+    width: 100%;
+    padding: 8px;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-family: var(--font-family);
+    font-size: 0.9em;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300e5ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px auto;
+    padding-right: 30px;
+}
+
+.select-group select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
+.connection-options {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.color-option,
+.range-option {
+    margin-bottom: 12px;
+}
+
+.color-option label,
+.range-option label {
+    display: block;
+    color: var(--text-color);
+    font-size: 0.85em;
+    margin-bottom: 5px;
+}
+
+.color-option input[type="color"] {
+    -webkit-appearance: none;
+    width: 40px;
+    height: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.color-option input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-option input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
+}
+
+.range-option input[type="range"] {
+    width: 100%;
+    background: var(--input-bg-color);
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.range-option input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    border: none;
+}
+
+/* Prevent text selection on UI elements */
+.checkbox-option,
+.checkbox-option label,
+.select-group,
+.color-option,
+.range-option {
+    user-select: none;
+}
+
+/* ========== Responsive Design (Mobile) ========== */
+@media (max-width: 768px) {
+  body {
+      overflow: auto; /* Permitir scroll en body en móvil si contenido excede */
+  }
+  #app-container {
+    flex-direction: column; /* Apila globo y sidebar */
+    height: auto; /* Altura basada en contenido */
+    min-height: 100vh;
+  }
+
+  #globe-area {
+    width: 100%;
+    height: 60vh; /* Globo ocupa el 60% de la altura */
+    flex-grow: 0; /* No necesita crecer */
+  }
+
+  #main-sidebar {
+    width: 100%; /* Ocupa todo el ancho */
+    height: auto; /* Altura automática */
+    min-height: 40vh; /* Altura mínima */
+    border-left: none; /* Quitar borde izquierdo */
+    border-top: 1px solid var(--border-color); /* Añadir borde superior */
+    box-shadow: 0 -5px 20px var(--shadow-color); /* Sombra arriba */
+  }
+
+  #sidebar-content {
+    padding: 15px; /* Menos padding en móvil */
+  }
+   #details-placeholder h3 { font-size: 1.1em; }
+   #details-placeholder p { font-size: 0.9em; } /* Reducir un poco en móvil */
+   .panel-links { font-size: 0.8em; }
+
+  #copilot-box {
+    height: 120px; /* Hacer caja copiloto más pequeña en móvil */
+  }
+
+  /* Re-posicionar icono y panel de configuración */
+  #settings-icon {
+    /* Keep in bottom right */
+    bottom: 15px;
+    right: 15px;
+    font-size: 1.3rem;
+  }
+  #settings-panel { /* Adjust centered panel for mobile */
+     width: 90vw; /* Wider on mobile */
+     max-height: 85vh; /* Allow more height */
+     padding: 20px 25px; /* Adjust padding */
+     /* Keep top: 50%, left: 50%, transform: translate(-50%, -50%) */
+  }
+  .close-settings-button {
+      /* Keep existing mobile styles */
+  }
+  #settings-panel .settings-section h4 {
+      font-size: 1em; /* Slightly smaller title on mobile */
+  }
+
+  /* Ajustar tamaño/margen del modal del formulario */
+  .modal-content {
+    width: 95%;
+    margin: 5% auto; /* Menos margen superior/inferior */
+    padding: 20px; /* Menos padding */
+  }
+   .modal-content h2 { font-size: 1.3em; margin-bottom: 20px; }
+   #actor-form button[type="submit"] { padding: 8px 20px; margin-top: 20px; }
+
+}
+/* === Fin Responsive === */
+
+/* --- Actor Image Container Styles --- */
+.actor-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: visible; /* Cambiado de hidden a visible para permitir que sobresalga */
+    background: var(--panel-bg-gradient);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actor-image-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-color) 50%, 
+        transparent 100%
+    );
+    z-index: 3;
+}
+
+.actor-image {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    /* Suavizar transición al cargar nueva imagen */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.actor-image.loading {
+    opacity: 0;
+}
+
+.no-image-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--accent-color);
+    font-family: var(--font-family-display);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9em;
+    background: linear-gradient(135deg,
+        rgba(0, 229, 255, 0.1) 0%,
+        transparent 100%
+    );
+    text-shadow: 0 0 10px var(--accent-color);
+}
+
+/* Eliminar estilos antiguos del parallax */
+.image-layer,
+.back-layer,
+.front-layer {
+    display: none;
+}
+
+/* Añadir campo de imagen al formulario */
+#form-modal .modal-content form div:nth-last-child(2) {
+    margin-bottom: 10px;
+}
+
+#form-modal .modal-content form div:last-of-type::after {
+    content: '';
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Estilo específico para la imagen de Charles Hoskinson */
+#actor-image[src*="founder-charles-hoskinson"] {
+    height: 115%;
+    margin-top: -11%; /* Cambiado de -12% a -11% para bajar la imagen un pixel */
+    z-index: 10; /* Asegurar que esté por encima de otros elementos */
+}
+
+/* === Fin style.css === */

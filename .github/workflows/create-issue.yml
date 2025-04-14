@@ -1,0 +1,95 @@
+# Nombre descriptivo del workflow
+name: Create Issue from Web Form
+
+# Trigger
+on:
+  repository_dispatch:
+    types: [new-actor-proposal]
+
+# Trabajos
+jobs:
+  create_issue_job:
+    name: Create GitHub Issue Job
+    runs-on: ubuntu-latest
+    # Permisos necesarios
+    permissions:
+      issues: write
+    steps:
+      # Paso 1: Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Formatear título y cuerpo (CON ETIQUETAS TRADUCIDAS)
+      - name: Format Issue Content
+        id: format
+        run: |
+          # Extraer campos requeridos
+          NAME="${{ github.event.client_payload.name }}"
+          TYPE="${{ github.event.client_payload.type }}"
+          CITY="${{ github.event.client_payload.city }}"
+          COUNTRY="${{ github.event.client_payload.country }}"
+          LAT="${{ github.event.client_payload.lat }}"
+          LNG="${{ github.event.client_payload.lng }}"
+          DESC="${{ github.event.client_payload.description }}"
+          # --- NUEVO: Extraer campos opcionales ---
+          TWITTER="${{ github.event.client_payload.twitter }}"
+          WEBSITE="${{ github.event.client_payload.website }}"
+
+          # Título (sin cambios)
+          ISSUE_TITLE="New Actor Proposal: $NAME"
+
+          # Construir cuerpo del Issue dinámicamente
+          # Empezamos con la info básica
+          ISSUE_BODY=$(cat <<EOF
+          **New Actor Proposal Received from Web Form:**
+
+          * **Name:** $NAME
+          * **Type:** $TYPE
+          * **City:** $CITY
+          * **Country:** $COUNTRY
+          * **Latitude:** \`$LAT\`
+          * **Longitude:** \`$LNG\`
+          EOF
+          )
+
+          # --- NUEVO: Añadir Twitter y Website SÓLO SI TIENEN VALOR ---
+          # Usamos 'if [[ -n "$VAR" ]]' que en bash comprueba si la variable no está vacía
+          if [[ -n "$TWITTER" ]]; then
+            # Añadimos la línea de Twitter al cuerpo. Usamos printf para formatear y evitar problemas con caracteres especiales.
+            # Añadimos el '@' aquí para mostrarlo
+            ISSUE_BODY+=$(printf "\n* **Twitter:** @%s" "$TWITTER")
+          fi
+          if [[ -n "$WEBSITE" ]]; then
+            # Añadimos la línea de Website al cuerpo.
+            ISSUE_BODY+=$(printf "\n* **Website:** %s" "$WEBSITE")
+          fi
+          # -----------------------------------------------------------
+
+          # Añadimos la descripción y el pie de página
+          ISSUE_BODY+=$(cat <<EOF
+
+          * **Description:**
+              >$DESC
+
+          ---
+          *Please review and verify this information before adding it to \`data/cardano-actors.json\`.*
+          EOF
+          )
+
+          # Preparar outputs (escapar % y usar delimitador para multilinea)
+          ISSUE_BODY="${ISSUE_BODY//'%'/'%25'}"
+          echo "issue_title=$ISSUE_TITLE" >> $GITHUB_OUTPUT
+          echo "issue_body<<EOF" >> $GITHUB_OUTPUT
+          echo "$ISSUE_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        shell: bash
+
+      # Paso 3: Crear el Issue usando gh CLI (igual que antes)
+      - name: Create GitHub Issue using gh CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_PAT }}
+          ISSUE_TITLE: ${{ steps.format.outputs.issue_title }}
+          ISSUE_BODY: ${{ steps.format.outputs.issue_body }}
+        run: |
+          gh issue create --title "$ISSUE_TITLE" --body "$ISSUE_BODY"
+        shell: bash
